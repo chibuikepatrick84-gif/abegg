@@ -678,9 +678,9 @@ footer small{font-size:.9rem}
   });
 
   /* ---------- Start now link: paste your URL between the quotes ---------- */
-  var START_URL='';
+  var START_URL='/start/';
   document.querySelectorAll('[data-start]').forEach(function(a){
-    if(START_URL){a.href=START_URL;a.target='_blank';a.rel='noopener';}
+    if(START_URL){a.href=START_URL;if(/^https?:/i.test(START_URL)){a.target='_blank';a.rel='noopener';}}
     else{a.addEventListener('click',function(e){e.preventDefault();});}
   });
 })();
