@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABEGG: Ask. Someone has it.</title>
+<meta name="description" content="Post what you need by text or voice. Members who have it reach out. Completely anonymous.">
+<meta name="theme-color" content="#066B33">
+<meta property="og:type" content="website">
+<meta property="og:title" content="ABEGG: Ask. Someone has it.">
+<meta property="og:description" content="Post what you need by text or voice. Members who have it reach out. Completely anonymous.">
+<link rel="icon" href="data:image/png;base64,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">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+
+  --font-display:ui-rounded,"SF Pro Rounded","Nunito","Trebuchet MS",system-ui,sans-serif;
+  --font-body:ui-rounded,"SF Pro Rounded","Nunito",system-ui,-apple-system,sans-serif;
+  --font-emoji:"Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif;
+
+  --paper:#F3FBF6;
+  --surface:#FFFFFF;
+  --ink:#08281A;
+  --ink-soft:#43604F;
+  --line:#D3E8DB;
+  --brand:#00A651;
+  --lime:#C9F26B;
+
+  --hero-a:#066B33;
+  --hero-b:#0A8040;
+  --hero-c:#5CD18B;
+  --hero-d:#F3FBF6;
+  --glow:rgba(201,242,107,.6);
+  --glow-2:rgba(255,255,255,.4);
+  --on-hero:#FFFFFF;
+  --on-hero-soft:rgba(255,255,255,.9);
+
+  --btn-bg:#066B33;
+  --btn-fg:#FFFFFF;
+  --phone:#0A2618;
+  --bubble-them:#E6F5EC;
+  --bubble-me:#0C7F3B;
+  --tint-1:#DDF6E5;
+  --tint-2:#EEF9C8;
+  --priv-bg:#08281A;
+  --priv-ink:#E9F7EE;
+  --priv-soft:#A9C7B4;
+  --priv-line:rgba(233,247,238,.18);
+  --shadow:0 34px 60px -32px rgba(3,40,20,.55);
+  --danger:#D4373D;
+}
+html{background:var(--hero-a);scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#06130C;--surface:#0E2217;--ink:#E7F6EC;--ink-soft:#9FBCAA;--line:#1C3A29;--brand:#19C267;
+    --hero-a:#032614;--hero-b:#054A25;--hero-c:#0B6B37;--hero-d:#06130C;--glow:rgba(201,242,107,.14);--glow-2:rgba(25,194,103,.16);
+    --btn-bg:#C9F26B;--btn-fg:#06281A;--phone:#02100A;--bubble-them:#173325;--bubble-me:#0C7F3B;
+    --tint-1:#0F2E1E;--tint-2:#1E2C0C;--priv-bg:#0C2A1B;--priv-ink:#E9F7EE;--priv-soft:#A9C7B4;
+    --shadow:0 34px 60px -32px rgba(0,0,0,.8);--danger:#FF6B70;
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#06130C;--surface:#0E2217;--ink:#E7F6EC;--ink-soft:#9FBCAA;--line:#1C3A29;--brand:#19C267;
+  --hero-a:#032614;--hero-b:#054A25;--hero-c:#0B6B37;--hero-d:#06130C;--glow:rgba(201,242,107,.14);--glow-2:rgba(25,194,103,.16);
+  --btn-bg:#C9F26B;--btn-fg:#06281A;--phone:#02100A;--bubble-them:#173325;--bubble-me:#0C7F3B;
+  --tint-1:#0F2E1E;--tint-2:#1E2C0C;--priv-bg:#0C2A1B;--priv-ink:#E9F7EE;--priv-soft:#A9C7B4;
+  --shadow:0 34px 60px -32px rgba(0,0,0,.8);--danger:#FF6B70;
+}
+
+*,*::before,*::after{box-sizing:inherit}
+[hidden]{display:none !important}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--font-body);font-size:1.0625rem;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+img{max-width:100%;display:block}
+a{color:inherit}
+button,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px;box-shadow:0 0 0 2px var(--hero-a)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.wrap{width:100%;max-width:1160px;margin-inline:auto;padding-inline:clamp(20px,4vw,40px)}
+.icon{width:1.25em;height:1.25em;fill:currentColor;flex:none}
+
+h1,h2,h3{font-family:var(--font-display);margin:0;letter-spacing:-.03em;font-weight:800}
+h2{font-size:clamp(2.1rem,5vw,3.6rem);line-height:1.02}
+h3{font-size:1.4rem;line-height:1.15;letter-spacing:-.02em}
+p{margin:0}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:.5em;
+  border:0;border-radius:999px;padding:.8em 1.4em;cursor:pointer;
+  background:var(--btn-bg);color:var(--btn-fg);font-weight:700;text-decoration:none;
+  transition:transform .15s ease,opacity .15s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn[disabled]{opacity:.4;cursor:not-allowed;transform:none}
+.btn-lime{background:var(--lime);color:#06281A}
+
+/* Hero */
+.hero{
+  background-color:var(--hero-d);
+  background-image:linear-gradient(180deg,var(--hero-a) 0,var(--hero-b) 470px,var(--hero-c) 74%,var(--hero-d) 100%);
+  background-repeat:no-repeat;
+  padding-bottom:clamp(64px,9vw,120px);
+  position:relative;overflow:clip;isolation:isolate;
+}
+.hero::before,.hero::after{content:"";position:absolute;border-radius:50%;filter:blur(60px);z-index:-1;pointer-events:none}
+.hero::before{width:520px;height:380px;right:-90px;top:330px;background:var(--glow)}
+.hero::after{width:460px;height:320px;left:-140px;top:470px;background:var(--glow-2)}
+@media (prefers-reduced-motion:no-preference){
+  .hero::before{animation:drift1 16s ease-in-out infinite alternate}
+  .hero::after{animation:drift2 21s ease-in-out infinite alternate}
+  @keyframes drift1{to{transform:translate(-110px,-90px) scale(1.15)}}
+  @keyframes drift2{to{transform:translate(130px,-50px) scale(1.1)}}
+}
+.nav{
+  display:flex;align-items:center;justify-content:space-between;gap:16px;
+  margin-top:20px;padding:10px 12px 10px 18px;border-radius:999px;background:var(--surface);
+  box-shadow:0 10px 30px -18px rgba(3,40,20,.6);
+}
+.brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-family:var(--font-display);font-weight:800;font-size:1.35rem;letter-spacing:-.02em}
+.brand img{width:32px;height:auto}
+.nav ul{display:flex;gap:28px;list-style:none;margin:0;padding:0;font-weight:500}
+.nav ul a{text-decoration:none;color:var(--ink-soft)}
+.nav ul a:hover{color:var(--ink)}
+.nav .btn{padding:.6em 1.2em}
+.hero-grid{
+  display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:clamp(32px,5vw,64px);
+  align-items:start;padding-top:clamp(40px,7vw,80px);
+}
+.hero h1{
+  color:var(--on-hero);font-size:clamp(3rem,7vw,6rem);line-height:.92;letter-spacing:-.04em;
+}
+.hero .sub{color:var(--on-hero-soft);font-size:1.25rem;line-height:1.45;max-width:32ch;margin-top:22px}
+
+/* Composer */
+.composer{
+  margin-top:40px;background:var(--surface);border-radius:28px;padding:18px;box-shadow:var(--shadow);
+}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--bubble-them);gap:2px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:.45em 1.1em;cursor:pointer;font-weight:600;color:var(--ink-soft)}
+.seg button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-fg)}
+.pane{margin-top:14px}
+.pane textarea{
+  width:100%;min-height:104px;resize:vertical;padding:14px 16px;border-radius:16px;
+  border:1.5px solid var(--line);background:transparent;line-height:1.45;
+}
+.pane textarea::placeholder{color:var(--ink-soft);opacity:.85}
+.pane textarea:focus{border-color:var(--brand);outline-offset:0}
+.voice{display:flex;align-items:center;gap:16px;min-height:104px;border:1.5px dashed var(--line);border-radius:16px;padding:14px 16px;flex-wrap:wrap}
+.mic{
+  width:60px;height:60px;border-radius:50%;border:0;cursor:pointer;flex:none;
+  background:var(--btn-bg);color:var(--btn-fg);display:grid;place-items:center;
+}
+.mic .icon{width:28px;height:28px}
+.mic.rec{background:var(--danger);color:#fff}
+.mic.rec::after{content:"";position:absolute}
+.bars{display:flex;align-items:center;gap:3px;height:40px;flex:1;min-width:120px}
+.bars i{flex:1;height:100%;max-width:6px;border-radius:3px;background:var(--brand);transform:scaleY(.15);transition:transform .08s linear}
+.timer{font-variant-numeric:tabular-nums;font-weight:600;min-width:2.6em}
+.voice-msg{flex-basis:100%;font-size:.95rem;color:var(--ink-soft)}
+.voice audio{flex-basis:100%;height:36px;width:100%}
+.composer-foot{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:14px;flex-wrap:wrap}
+.fine{font-size:.875rem;color:var(--ink-soft);max-width:30ch;line-height:1.4}
+
+/* Phone */
+.stage{position:relative;width:100%;max-width:360px;justify-self:center}
+.sticker{
+  position:absolute;z-index:2;width:58px;height:58px;border-radius:20px;background:var(--surface);
+  display:grid;place-items:center;font-size:30px;line-height:1;font-family:var(--font-emoji);
+  box-shadow:0 14px 28px -12px rgba(3,40,20,.55);transform:rotate(var(--r,0deg));
+}
+.s1{top:70px;left:-36px;--r:-8deg}
+.s2{top:-18px;right:-22px;--r:7deg}
+.s3{bottom:150px;right:-34px;--r:6deg}
+.s4{bottom:46px;left:-30px;--r:-6deg}
+@media (max-width:500px){.s1{left:-10px}.s2{right:-8px}.s3{right:-10px}.s4{left:-10px}}
+@media (prefers-reduced-motion:no-preference){
+  .sticker{animation:bob 6s ease-in-out infinite}
+  .s2{animation-duration:7.2s;animation-delay:-1.6s}
+  .s3{animation-duration:6.6s;animation-delay:-3s}
+  .s4{animation-duration:7.8s;animation-delay:-4.4s}
+  @keyframes bob{0%,100%{transform:translateY(0) rotate(var(--r))}50%{transform:translateY(-10px) rotate(calc(var(--r) * -.6))}}
+  .phone{animation:phone-float 9s ease-in-out infinite}
+  @keyframes phone-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+}
+.phone{
+  width:100%;background:var(--phone);border-radius:48px;padding:12px;
+  box-shadow:var(--shadow);border:1px solid rgba(255,255,255,.08);
+}
+.screen{background:var(--surface);border-radius:36px;height:600px;display:flex;flex-direction:column;overflow:hidden}
+.screen-head{display:flex;align-items:center;gap:10px;padding:18px 20px 14px;border-bottom:1px solid var(--line);font-weight:700}
+.screen-head img{width:24px;height:auto}
+.screen-head .lock{margin-left:auto;color:var(--ink-soft);display:flex;align-items:center;gap:6px;font-weight:500;font-size:.85rem}
+.scroller{flex:1;overflow-y:auto;padding:18px 16px 24px;scrollbar-width:none}
+.scroller::-webkit-scrollbar{display:none}
+#thread{display:flex;flex-direction:column;gap:14px}
+.msg{display:flex;flex-direction:column;max-width:82%;gap:4px}
+.msg .who{font-size:.8rem;color:var(--ink-soft);padding-inline:6px}
+.msg .bubble{padding:11px 15px;line-height:1.4;font-size:.98rem;overflow-wrap:anywhere}
+.msg.me{align-self:flex-end;align-items:flex-end}
+.msg.me .bubble{background:var(--bubble-me);color:#fff;border-radius:20px 20px 5px 20px}
+.msg.them{align-self:flex-start}
+.msg.them .bubble{background:var(--bubble-them);color:var(--ink);border-radius:20px 20px 20px 5px}
+@media (prefers-reduced-motion:no-preference){
+  .msg{animation:pop .28s ease-out both}
+  @keyframes pop{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:none}}
+}
+.typing .bubble{display:flex;gap:5px;padding:14px 16px}
+.typing i{width:7px;height:7px;border-radius:50%;background:var(--ink-soft);opacity:.5}
+@media (prefers-reduced-motion:no-preference){
+  .typing i{animation:blink 1s infinite}
+  .typing i:nth-child(2){animation-delay:.15s}
+  .typing i:nth-child(3){animation-delay:.3s}
+  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+}
+.voice-chip{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;cursor:pointer;color:#fff;font-weight:600}
+.voice-chip .dot{width:32px;height:32px;border-radius:50%;background:#fff;color:var(--bubble-me);display:grid;place-items:center}
+.voice-chip .wave{display:flex;gap:2px;align-items:center;height:22px}
+.voice-chip .wave i{width:3px;border-radius:2px;background:rgba(255,255,255,.85)}
+
+/* Sections */
+.sec{padding-block:clamp(64px,9vw,120px)}
+.sec-head{max-width:22ch}
+.sec-head + p{margin-top:18px;max-width:46ch;color:var(--ink-soft);font-size:1.15rem}
+
+.steps{list-style:none;margin:56px 0 0;padding:0;display:grid;grid-template-columns:repeat(3,1fr)}
+.steps li{padding:0 clamp(20px,3vw,44px);border-left:1px solid var(--line)}
+.steps li:first-child{padding-left:0;border-left:0}
+.n-row{display:flex;align-items:flex-end;gap:18px}
+.em{font-family:var(--font-emoji);font-size:clamp(2.6rem,5vw,3.5rem);line-height:1;display:inline-block;margin-bottom:.1em}
+@media (prefers-reduced-motion:no-preference){
+  .steps .em{animation:em-bob 4.6s ease-in-out infinite}
+  .steps li:nth-child(2) .em{animation-delay:-1.5s}
+  .steps li:nth-child(3) .em{animation-delay:-3s}
+  @keyframes em-bob{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-8px) rotate(5deg)}}
+  .cta .em{animation:em-bob 5s ease-in-out infinite}
+}
+.e{font-family:var(--font-emoji);margin-right:.35em}
+.steps .n{font-family:var(--font-display);font-weight:800;font-size:clamp(4rem,8vw,6.5rem);line-height:.9;letter-spacing:-.05em;color:var(--brand)}
+.steps h3{margin-top:18px}
+.steps p{margin-top:12px;color:var(--ink-soft);max-width:32ch}
+
+.privacy{background:var(--priv-bg);color:var(--priv-ink)}
+.privacy-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,.9fr);gap:clamp(32px,6vw,80px);align-items:center}
+.privacy .sec-head + p{color:var(--priv-soft)}
+.receipt{background:var(--surface);color:var(--ink);border-radius:24px;padding:26px 28px;box-shadow:0 30px 60px -30px rgba(0,0,0,.6)}
+.receipt h3{font-size:1.15rem}
+.receipt ul{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:10px}
+.receipt li{display:flex;gap:12px;align-items:flex-start;line-height:1.4}
+.receipt li .icon{margin-top:.1em;padding:3px;border-radius:50%;width:1.4em;height:1.4em}
+.receipt .yes .icon{background:var(--bubble-them);color:var(--bubble-me)}
+.receipt .no .icon{background:var(--tint-2);color:var(--danger)}
+.receipt hr{border:0;border-top:2px dashed var(--line);margin:22px 0}
+.receipt .no li{color:var(--ink-soft)}
+
+.asks{display:flex;flex-wrap:wrap;gap:14px;margin-top:48px}
+.ask{border-radius:26px;padding:16px 22px;background:var(--tint-1);max-width:100%}
+.ask:nth-child(3n+2){background:var(--tint-2)}
+.ask:nth-child(3n){background:var(--surface);border:1.5px solid var(--line)}
+.ask p{font-weight:600;line-height:1.3}
+.ask small{display:block;margin-top:6px;color:var(--ink-soft);font-size:.85rem}
+.ask.big p{font-family:var(--font-display);font-size:1.7rem;letter-spacing:-.02em;font-weight:700;line-height:1.1}
+.ask.big{padding:22px 28px}
+
+.faq{max-width:760px;margin-top:40px}
+.faq details{border-top:1px solid var(--line)}
+.faq details:last-child{border-bottom:1px solid var(--line)}
+.faq summary{list-style:none;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;font-weight:700;font-size:1.15rem}
+.faq summary::-webkit-details-marker{display:none}
+.faq summary::after{content:"";width:10px;height:10px;border-right:2.5px solid currentColor;border-bottom:2.5px solid currentColor;transform:rotate(45deg);flex:none;transition:transform .2s ease}
+.faq details[open] summary::after{transform:rotate(-135deg)}
+.faq details p{padding-bottom:22px;color:var(--ink-soft);max-width:60ch}
+
+.cta{
+  border-radius:40px;padding:clamp(40px,7vw,88px) clamp(28px,6vw,80px);color:var(--on-hero);
+  background:
+    radial-gradient(480px 320px at 92% 110%,var(--glow),transparent 70%),
+    linear-gradient(120deg,var(--hero-a),var(--hero-b));
+}
+.cta h2{max-width:14ch}
+.cta p{margin-top:16px;color:var(--on-hero-soft);font-size:1.2rem;max-width:36ch}
+.cta .btn{margin-top:32px}
+
+footer{background:var(--hero-a);color:var(--on-hero-soft);padding:36px 0 44px;margin-top:clamp(64px,9vw,120px)}
+footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+footer .wrap + .wrap{margin-top:16px}
+footer .brand{color:var(--on-hero)}
+footer small{font-size:.9rem}
+.credit{flex:1;display:flex;justify-content:space-between;gap:12px 24px;flex-wrap:wrap;margin-top:8px;padding-top:22px;border-top:1px solid rgba(255,255,255,.22);font-size:.95rem}
+.credit a{color:var(--on-hero);font-weight:700;text-underline-offset:3px}
+
+@media (max-width:960px){
+  .hero-grid{grid-template-columns:1fr}
+  .hero .sub{max-width:36ch}
+  .steps{grid-template-columns:1fr;gap:40px}
+  .steps li{padding:32px 0 0;border-left:0;border-top:1px solid var(--line)}
+  .steps li:first-child{padding-top:0;border-top:0}
+  .privacy-grid{grid-template-columns:1fr}
+  .nav ul{display:none}
+  .screen{height:560px}
+}
+@media (max-width:420px){
+  .ask.big p{font-size:1.4rem}
+}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-mic" viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><path d="M17 9h-1V7a4 4 0 0 0-8 0v2H7a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2zM10 7a2 2 0 0 1 4 0v2h-4V7z"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M19 6.4 17.6 5 12 10.6 6.4 5 5 6.4 10.6 12 5 17.6 6.4 19 12 13.4 17.6 19 19 17.6 13.4 12z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M7 5h4v14H7zm6 0h4v14h-4z"/></symbol>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="#top"><img src="data:image/png;base64,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" alt="">ABEGG</a>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#privacy">Privacy</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <a class="btn" href="#" data-start>Start now</a>
+    </nav>
+
+    <div class="hero-grid" id="top">
+      <div>
+        <h1>Abegg,<br>who has it?</h1>
+        <p class="sub">Post what you need by text or voice. Members who have it reach out. Nobody sees a name, a photo or a number.</p>
+
+        <div class="composer">
+          <div class="seg" role="group" aria-label="How do you want to ask?">
+            <button type="button" id="modeType" aria-pressed="true">Type</button>
+            <button type="button" id="modeVoice" aria-pressed="false">Record voice</button>
+          </div>
+
+          <div class="pane" id="paneType">
+            <label class="sr" for="req">Your request</label>
+            <textarea id="req" maxlength="240" rows="3" placeholder="I need a dress for a wedding this Saturday, size 12"></textarea>
+          </div>
+
+          <div class="pane" id="paneVoice" hidden>
+            <div class="voice">
+              <button type="button" class="mic" id="mic" aria-label="Start recording"><svg class="icon" id="micIcon"><use href="#i-mic"/></svg></button>
+              <div class="bars" aria-hidden="true"></div>
+              <span class="timer" id="timer">0:00</span>
+              <p class="voice-msg" id="voiceMsg" role="status">Tap the mic and say what you need. Up to 60 seconds.</p>
+              <audio id="preview" controls hidden></audio>
+            </div>
+          </div>
+
+          <div class="composer-foot">
+            <p class="fine">Preview only. Nothing you type or record here is saved or sent.</p>
+            <button type="button" class="btn" id="post" disabled>Post request</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <span class="sticker s1" aria-hidden="true">👗</span>
+        <span class="sticker s2" aria-hidden="true">🙏🏾</span>
+        <span class="sticker s3" aria-hidden="true">🤫</span>
+        <span class="sticker s4" aria-hidden="true">🔒</span>
+      <div class="phone" id="phone" aria-label="Preview of an anonymous request thread">
+        <div class="screen">
+          <div class="screen-head">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAACxCAMAAAC1HAyNAAAAY1BMVEVMaXEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplH///8Aqljv9/EWsmne7+PB4svP6deCypxfv4ix3L+S0Kei1bJxxZJGu34ArV8rtnPtkVM/AAAAEHRSTlMAgEDQMKBgwPAQ4HAgULCQm+RuOAAAAAlwSFlzAAALEgAACxIB0t1+/AAABXxJREFUeJztnemSqjAQhQdUFldAUdx9/6e8IqAsDaSbbF11v58zQ3EqcziBLJ2/PwWErrtyclauu1ZxA9msvZ0fNfEXq7lpWUNsFssIJlhsQtPqQOaLoEdyJdw1LbGD1/YFxNIzLbOB1+cMi3W7Iu381b0xLfdDuEBozvEtCMPN8DMIEawMaw53aM05W6MxOJ+RRL/dbTAFV3h3fHEMaQ63dM1vZkYeSlc0o/sIDGSgM1FzzkLzQ7nGdCz9zLS+DBJCugd90U0MaRhd0U0OaZhAS3RPCWkY9dE9MaRhVEf35JCGURvdMkIaRl10SwppGFXRLS+kYVREt9SQhpEf3ZJDGkZ2dMsPaRiZ0a0kpGHkRberqaE/yIpudSENIyO61zoewybTo1t1SMNMi270uJIspkS3lpCGoUf3ypjmnB1Js8aQhqFEt9aQhgnQg926QxoGF90GQhpmiYhuMyENIxrdxkIaxhdyicGQhhGJbpvcUTGaJZ5phSCLYdF2WfrHoGxbRQ/KVv8ZTqdXtp2eruiRvTGtawQwSeYWRl4TKLdt61y6BN1e0uYnscJvi3ZNKxKi/SqlZjRdNi2P2PERME4j/kLr86OiniP29uRtag/k2rQWBC7Dpq41Nh9X51SjJGbHmLBUMWJ/X14nKF+bTOtAsmHzBlJnwdAgpUU4hXVBHtl2f3dBOMy6mAKfoa3fvFWblkBgzi6tczZMPr2aOGy+YurwVO2z689z/D+VK7BU8V+1Pv6r1gfXDOGZ1xxVO0zfQ3i+8/F8v2b6LcPzu5HnNzrP8RB2xg5YjvNtWY6pepzmGr+EfCajf2z/OA67fxdcsLLId1Kak0Uqg/CySG1FDqMJx9qqBT5vUD+D2L9Q60djXQsbizRW7XOxyKwumo1FWgufmFikta2Dh0WaBuFikc4mAxYW6ez7Mb0TSYS2QXh8qnd3oYSmJQkAbPmx3yLLrmisRQ5pnB5od39feqJcCu0dxFkk2cdxfCTc+k36vjQlXAfuCUNZ5BXnPAj3ju6fS1/o6yCDIC1y+Nw6TdD3Lv5LcYy/Et5cirPI5XPvK/re5YU3/IU9mwZRFnnGNI8U/tjjmxo2CHblZ1bcHhkGhbPiO+6qnL7dx8gx4dPn/idUqx0KU1PCp3dXKW5MuFSAkZ2kVH9Uy1MnWyQ6x0jZSfHviSldTP/2Ney0wRUn+1CKPqMlR9WaWgkWiaJbKVuo8UpHUdJyyCCE9ePHQsheoPmKyCMldTS8LRM9s5RcSi2XEZd8/5AmesgglJml0iTxfjCC76U7aPYYNghpi0FW6onTc197n9Pqb0gPYjS23ZgyJvyq2jHeX4HH8nn9asZ2pD9GSvxQpg2+ns0b/Pp41n7zuJ5+vxvzfj/DBqFOGzzSuM7xeMuy6/G4r/8wJb2MF2xHVBOnDZKsobDLPiM3dCSw+Z86s5RkqSrNjQkCmRb5cL7Amk+94SLImEEmziwl51urxfeX+3P8uhEEKs1MnXxMXvfsdszJssd0xTkCFUTsm3wcN4iNk49CpYisGxMWKjFj27SBiEHsmzYQrEJkmUUEC4PZZZHuBAEHiwhXGLTKIsKV42yySKf6Ri82dTSIanf2bJHoG0mFsGcaD1WC15ZVZ0ApHAaNjax2bIezl8iyqnZs7UCXy7Th40A8qyssKCoSUAqqmhZNq3Fs2iNiXwMdzG44wOZHRWiyrwnIpbtNFr+bcAiAOdmTTvEzJXvi0YNmZE8+L3Gu/5GUcbBFqDsAJZ3Zore7kXbyicaKxzLPdtRWmV7yOZqKjnlqouCsVeFzXqkEjpITn5TqXqrRnOOqGpXaqj2HN/TkP5j+Ssexma7jy4rCwHd0Hosdup7jOD6dneN45MPT/wGZ6ffp20nIPwAAAABJRU5ErkJggg==" alt="">
+            <span>Your requests</span>
+            <span class="lock"><svg class="icon"><use href="#i-lock"/></svg>Anonymous</span>
+          </div>
+          <div class="scroller" id="scroller">
+            <div id="thread" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <section class="sec" id="how">
+    <div class="wrap">
+      <h2 class="sec-head">Ask once. Members who have it answer.</h2>
+      <p>No searching through listings and no chasing strangers. You say what you need, and it finds its way to the person who has it.</p>
+      <ol class="steps">
+        <li>
+          <div class="n-row" aria-hidden="true"><div class="n">1</div><span class="em">🎤</span></div>
+          <h3>Say what you need</h3>
+          <p>Type it or record a voice note. A dress for a wedding, a generator for the weekend, a textbook for one semester.</p>
+        </li>
+        <li>
+          <div class="n-row" aria-hidden="true"><div class="n">2</div><span class="em">💬</span></div>
+          <h3>Members reach out</h3>
+          <p>Anyone on ABEGG who has it replies to your request. They see what you asked for and nothing about you.</p>
+        </li>
+        <li>
+          <div class="n-row" aria-hidden="true"><div class="n">3</div><span class="em">✅</span></div>
+          <h3>You choose</h3>
+          <p>Read the replies, keep talking to the one that fits and ignore the rest. You never have to reveal who you are.</p>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="sec privacy" id="privacy">
+    <div class="wrap privacy-grid">
+      <div>
+        <h2 class="sec-head">No names. No faces. No trail. <span class="e">🤫</span></h2>
+        <p>Asking for help should not cost you your privacy. Members see the request, never the person behind it.</p>
+      </div>
+      <div class="receipt">
+        <div class="yes">
+          <h3>A member sees</h3>
+          <ul>
+            <li><svg class="icon"><use href="#i-check"/></svg>What you asked for, as text or a voice note</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>A one-time alias that changes with every request</li>
+            <li><svg class="icon"><use href="#i-check"/></svg>When the request was posted</li>
+          </ul>
+        </div>
+        <hr>
+        <div class="no">
+          <h3>A member never sees</h3>
+          <ul>
+            <li><svg class="icon"><use href="#i-x"/></svg>Your name or profile photo</li>
+            <li><svg class="icon"><use href="#i-x"/></svg>Your phone number or email</li>
+            <li><svg class="icon"><use href="#i-x"/></svg>Your location</li>
+            <li><svg class="icon"><use href="#i-x"/></svg>Your other requests</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="asks">
+    <div class="wrap">
+      <h2 class="sec-head">The kind of thing people ask for</h2>
+      <p>Examples of what members might post.</p>
+      <div class="asks">
+        <div class="ask big"><p><span class="e">👗</span>Need an aso ebi for Saturday, size M</p><small>4 replies</small></div>
+        <div class="ask"><p><span class="e">⚡</span>Anyone with a generator to borrow this weekend?</p><small>2 replies</small></div>
+        <div class="ask"><p><span class="e">📽️</span>A projector for a church event on Friday</p><small>3 replies</small></div>
+        <div class="ask"><p><span class="e">📸</span>Ring light for one shoot, returned the same day</p><small>5 replies</small></div>
+        <div class="ask big"><p><span class="e">👰</span>Who has a wedding dress they only wore once?</p><small>7 replies</small></div>
+        <div class="ask"><p><span class="e">💻</span>Spare laptop charger, HP, the round pin</p><small>1 reply</small></div>
+        <div class="ask"><p><span class="e">📚</span>Past questions for 200 level Surveying</p><small>6 replies</small></div>
+        <div class="ask"><p><span class="e">🧊</span>A big cooler for a birthday party</p><small>2 replies</small></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <h2 class="sec-head">Questions people ask</h2>
+      <div class="faq">
+        <details>
+          <summary>How does ABEGG keep me anonymous?</summary>
+          <p>Members only see your request and a one-time alias. Your name, photo, phone number and location are never shown to anyone.</p>
+        </details>
+        <details>
+          <summary>Can I speak my request instead of typing?</summary>
+          <p>Yes. Record a voice note of up to a minute, or type it. Members can reply to either.</p>
+        </details>
+        <details>
+          <summary>What happens after someone replies?</summary>
+          <p>Their reply shows up in your request thread. You decide who to keep talking to and who to ignore.</p>
+        </details>
+        <details>
+          <summary>Who can see my request?</summary>
+          <p>Only ABEGG members. Requests are not posted on public pages.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap">
+    <div class="cta">
+      <h2>Someone has it. Just abegg. <span class="em" aria-hidden="true">🙏🏾</span></h2>
+      <p>Post your first request and let the right member find you.</p>
+      <a class="btn btn-lime" href="#" data-start>Start now</a>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALUAAACxCAMAAAC1HAyNAAAAY1BMVEVMaXEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplEAplH///8Aqljv9/EWsmne7+PB4svP6deCypxfv4ix3L+S0Kei1bJxxZJGu34ArV8rtnPtkVM/AAAAEHRSTlMAgEDQMKBgwPAQ4HAgULCQm+RuOAAAAAlwSFlzAAALEgAACxIB0t1+/AAABXxJREFUeJztnemSqjAQhQdUFldAUdx9/6e8IqAsDaSbbF11v58zQ3EqcziBLJ2/PwWErrtyclauu1ZxA9msvZ0fNfEXq7lpWUNsFssIJlhsQtPqQOaLoEdyJdw1LbGD1/YFxNIzLbOB1+cMi3W7Iu381b0xLfdDuEBozvEtCMPN8DMIEawMaw53aM05W6MxOJ+RRL/dbTAFV3h3fHEMaQ63dM1vZkYeSlc0o/sIDGSgM1FzzkLzQ7nGdCz9zLS+DBJCugd90U0MaRhd0U0OaZhAS3RPCWkY9dE9MaRhVEf35JCGURvdMkIaRl10SwppGFXRLS+kYVREt9SQhpEf3ZJDGkZ2dMsPaRiZ0a0kpGHkRberqaE/yIpudSENIyO61zoewybTo1t1SMNMi270uJIspkS3lpCGoUf3ypjmnB1Js8aQhqFEt9aQhgnQg926QxoGF90GQhpmiYhuMyENIxrdxkIaxhdyicGQhhGJbpvcUTGaJZ5phSCLYdF2WfrHoGxbRQ/KVv8ZTqdXtp2eruiRvTGtawQwSeYWRl4TKLdt61y6BN1e0uYnscJvi3ZNKxKi/SqlZjRdNi2P2PERME4j/kLr86OiniP29uRtag/k2rQWBC7Dpq41Nh9X51SjJGbHmLBUMWJ/X14nKF+bTOtAsmHzBlJnwdAgpUU4hXVBHtl2f3dBOMy6mAKfoa3fvFWblkBgzi6tczZMPr2aOGy+YurwVO2z689z/D+VK7BU8V+1Pv6r1gfXDOGZ1xxVO0zfQ3i+8/F8v2b6LcPzu5HnNzrP8RB2xg5YjvNtWY6pepzmGr+EfCajf2z/OA67fxdcsLLId1Kak0Uqg/CySG1FDqMJx9qqBT5vUD+D2L9Q60djXQsbizRW7XOxyKwumo1FWgufmFikta2Dh0WaBuFikc4mAxYW6ez7Mb0TSYS2QXh8qnd3oYSmJQkAbPmx3yLLrmisRQ5pnB5od39feqJcCu0dxFkk2cdxfCTc+k36vjQlXAfuCUNZ5BXnPAj3ju6fS1/o6yCDIC1y+Nw6TdD3Lv5LcYy/Et5cirPI5XPvK/re5YU3/IU9mwZRFnnGNI8U/tjjmxo2CHblZ1bcHhkGhbPiO+6qnL7dx8gx4dPn/idUqx0KU1PCp3dXKW5MuFSAkZ2kVH9Uy1MnWyQ6x0jZSfHviSldTP/2Ney0wRUn+1CKPqMlR9WaWgkWiaJbKVuo8UpHUdJyyCCE9ePHQsheoPmKyCMldTS8LRM9s5RcSi2XEZd8/5AmesgglJml0iTxfjCC76U7aPYYNghpi0FW6onTc197n9Pqb0gPYjS23ZgyJvyq2jHeX4HH8nn9asZ2pD9GSvxQpg2+ns0b/Pp41n7zuJ5+vxvzfj/DBqFOGzzSuM7xeMuy6/G4r/8wJb2MF2xHVBOnDZKsobDLPiM3dCSw+Z86s5RkqSrNjQkCmRb5cL7Amk+94SLImEEmziwl51urxfeX+3P8uhEEKs1MnXxMXvfsdszJssd0xTkCFUTsm3wcN4iNk49CpYisGxMWKjFj27SBiEHsmzYQrEJkmUUEC4PZZZHuBAEHiwhXGLTKIsKV42yySKf6Ri82dTSIanf2bJHoG0mFsGcaD1WC15ZVZ0ApHAaNjax2bIezl8iyqnZs7UCXy7Th40A8qyssKCoSUAqqmhZNq3Fs2iNiXwMdzG44wOZHRWiyrwnIpbtNFr+bcAiAOdmTTvEzJXvi0YNmZE8+L3Gu/5GUcbBFqDsAJZ3Zore7kXbyicaKxzLPdtRWmV7yOZqKjnlqouCsVeFzXqkEjpITn5TqXqrRnOOqGpXaqj2HN/TkP5j+Ssexma7jy4rCwHd0Hosdup7jOD6dneN45MPT/wGZ6ffp20nIPwAAAABJRU5ErkJggg==" alt="">ABEGG</a>
+    <small>Ask. Someone has it. &copy; 2026 ABEGG</small>
+  </div>
+  <div class="wrap">
+    <div class="credit">
+      <span>Designed and animated by motionbyKlever</span>
+      <a href="mailto:motionbyklever@gmail.com">motionbyklever@gmail.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var $=function(s){return document.querySelector(s)};
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var thread=$('#thread'), scroller=$('#scroller'), phone=$('#phone');
+  var ta=$('#req'), post=$('#post');
+  var modeType=$('#modeType'), modeVoice=$('#modeVoice'), paneType=$('#paneType'), paneVoice=$('#paneVoice');
+  var mic=$('#mic'), micIcon=$('#micIcon'), timer=$('#timer'), vmsg=$('#voiceMsg'), preview=$('#preview');
+  var bars=[], mode='type';
+
+  var barsWrap=document.querySelector('.bars');
+  for(var b=0;b<28;b++){var bi=document.createElement('i');barsWrap.appendChild(bi);bars.push(bi);}
+
+  /* ---------- thread helpers ---------- */
+  var ALPHA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789', used={};
+  function alias(){
+    var a;
+    do{a='';for(var i=0;i<4;i++)a+=ALPHA.charAt(Math.floor(Math.random()*ALPHA.length));}while(used[a]);
+    used[a]=1;return 'Member '+a;
+  }
+  function el(tag,cls,text){var n=document.createElement(tag);if(cls)n.className=cls;if(text!=null)n.textContent=text;return n;}
+  function down(){scroller.scrollTo({top:scroller.scrollHeight,behavior:reduce?'auto':'smooth'});}
+  function sleep(ms){return new Promise(function(r){setTimeout(r,ms)});}
+
+  function addMine(content){
+    var w=el('div','msg me');w.appendChild(el('span','who','Your request'));
+    var bub=el('div','bubble');bub.appendChild(content);w.appendChild(bub);
+    thread.appendChild(w);down();
+  }
+  function addTheirs(text){
+    var w=el('div','msg them');w.appendChild(el('span','who',alias()));
+    w.appendChild(el('div','bubble',text));thread.appendChild(w);down();
+  }
+  function typing(){
+    var w=el('div','msg them typing');var bub=el('div','bubble');
+    for(var i=0;i<3;i++)bub.appendChild(document.createElement('i'));
+    w.appendChild(bub);thread.appendChild(w);down();return w;
+  }
+  var chain=Promise.resolve();
+  function runReplies(list){
+    chain=chain.then(async function(){
+      for(var i=0;i<list.length;i++){
+        await sleep(reduce?0:list[i][1]);
+        if(!reduce){var t=typing();await sleep(900);t.remove();}
+        addTheirs(list[i][0]);
+      }
+    });
+  }
+
+  /* ---------- opening moment ---------- */
+  addMine(document.createTextNode('I need a dress for a wedding this Saturday, size 12. Green if possible.'));
+  runReplies([
+    ['I have an emerald one, size 12. Worn once. Want photos? 📸',1500],
+    ['Mine is navy, also size 12. I can lend it for the weekend. 👗',1400]
+  ]);
+
+  var SETS=[
+    [['I have one. Want me to send a photo? 📸',1200],['Mine might work too. When do you need it by? ⏰',1400]],
+    [['Yes, I have this. Tell me what you need it for. 🙂',1200],['I can help. Is a weekend loan okay? 🤝',1400]],
+    [['I have something close. Sending details here. 👌',1200],['Same here. Ask me anything about it. 💬',1400]]
+  ];
+  var VOICE_SET=[['I heard your note. I have one, want details? 🎧',1200],['Got it. I might have what you need. 🙌',1400]];
+  var setIdx=0;
+
+  /* ---------- mode switching ---------- */
+  function setMode(m){
+    if(m===mode)return;
+    if(recorder&&recorder.state==='recording')stopRec();
+    mode=m;
+    modeType.setAttribute('aria-pressed',m==='type');
+    modeVoice.setAttribute('aria-pressed',m==='voice');
+    paneType.hidden=m!=='type';paneVoice.hidden=m!=='voice';
+    refresh();
+  }
+  modeType.addEventListener('click',function(){setMode('type')});
+  modeVoice.addEventListener('click',function(){setMode('voice')});
+  ta.addEventListener('input',refresh);
+  function refresh(){post.disabled=mode==='type'?!ta.value.trim():!voice.url;}
+
+  /* ---------- voice recording ---------- */
+  var recorder=null,stream=null,chunks=[],t0=0,tick=null,actx=null,analyser=null,raf=null;
+  var voice={url:null,secs:0};
+  function fmt(s){return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');}
+  function setMicIcon(id){micIcon.querySelector('use').setAttribute('href','#'+id);}
+  function resetBars(){bars.forEach(function(b){b.style.transform='scaleY(.15)'});}
+  function viz(){
+    var data=new Uint8Array(analyser.frequencyBinCount);
+    (function loop(){
+      analyser.getByteFrequencyData(data);
+      for(var i=0;i<bars.length;i++){bars[i].style.transform='scaleY('+(0.15+(data[2+i*2]||0)/255*0.85)+')';}
+      raf=requestAnimationFrame(loop);
+    })();
+  }
+  async function startRec(){
+    vmsg.textContent='';
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia||!window.MediaRecorder){
+      vmsg.textContent='Recording is not available in this browser. Type your request instead.';return;
+    }
+    try{stream=await navigator.mediaDevices.getUserMedia({audio:true});}
+    catch(e){vmsg.textContent='Microphone access was blocked. Allow it in your browser, or type your request instead.';return;}
+    chunks=[];preview.hidden=true;voice.url=null;refresh();
+    recorder=new MediaRecorder(stream);
+    recorder.ondataavailable=function(e){if(e.data&&e.data.size)chunks.push(e.data);};
+    recorder.onstop=function(){
+      var blob=new Blob(chunks,{type:recorder.mimeType||'audio/webm'});
+      if(voice.url)URL.revokeObjectURL(voice.url);
+      voice.url=URL.createObjectURL(blob);
+      voice.secs=Math.max(1,Math.round((Date.now()-t0)/1000));
+      stream.getTracks().forEach(function(t){t.stop()});
+      cancelAnimationFrame(raf);resetBars();
+      if(actx){try{actx.close()}catch(e){}actx=null;}
+      preview.src=voice.url;preview.hidden=false;
+      vmsg.textContent='Recorded '+fmt(voice.secs)+'. Tap the mic to record again, or post it.';
+      refresh();
+    };
+    try{
+      actx=new (window.AudioContext||window.webkitAudioContext)();
+      analyser=actx.createAnalyser();analyser.fftSize=128;
+      actx.createMediaStreamSource(stream).connect(analyser);viz();
+    }catch(e){}
+    recorder.start();t0=Date.now();
+    mic.classList.add('rec');mic.setAttribute('aria-label','Stop recording');setMicIcon('i-stop');
+    vmsg.textContent='Recording...';timer.textContent='0:00';
+    tick=setInterval(function(){
+      var s=Math.round((Date.now()-t0)/1000);timer.textContent=fmt(s);
+      if(s>=60)stopRec();
+    },250);
+  }
+  function stopRec(){
+    clearInterval(tick);
+    if(recorder&&recorder.state==='recording')recorder.stop();
+    mic.classList.remove('rec');mic.setAttribute('aria-label','Start recording');setMicIcon('i-mic');
+  }
+  mic.addEventListener('click',function(){
+    if(recorder&&recorder.state==='recording')stopRec();else startRec();
+  });
+
+  /* ---------- posting ---------- */
+  function voiceChip(url,secs){
+    var btn=el('button','voice-chip');btn.type='button';btn.setAttribute('aria-label','Play voice note');
+    var dot=el('span','dot');dot.innerHTML='<svg class="icon" aria-hidden="true"><use href="#i-play"/></svg>';
+    var wave=el('span','wave');
+    [8,14,10,18,12,20,9,15,11,17,8,13].forEach(function(h){var i=document.createElement('i');i.style.height=h+'px';wave.appendChild(i);});
+    btn.appendChild(dot);btn.appendChild(wave);btn.appendChild(el('span','',fmt(secs)));
+    var audio=new Audio(url);
+    function icon(id){dot.querySelector('use').setAttribute('href','#'+id);}
+    btn.addEventListener('click',function(){if(audio.paused){audio.play();icon('i-pause');}else{audio.pause();icon('i-play');}});
+    audio.addEventListener('ended',function(){icon('i-play')});
+    return btn;
+  }
+  post.addEventListener('click',function(){
+    var reply;
+    if(mode==='type'){
+      var t=ta.value.trim();if(!t)return;
+      addMine(document.createTextNode(t));ta.value='';
+      reply=SETS[setIdx++%SETS.length];
+    }else{
+      if(!voice.url)return;
+      addMine(voiceChip(voice.url,voice.secs));
+      voice={url:null,secs:0};preview.hidden=true;preview.removeAttribute('src');
+      timer.textContent='0:00';vmsg.textContent='Posted. Record another whenever you like.';
+      reply=VOICE_SET;
+    }
+    refresh();runReplies(reply);
+    if(window.matchMedia('(max-width:960px)').matches){
+      phone.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});
+    }
+  });
+
+  /* ---------- Start now link: paste your URL between the quotes ---------- */
+  var START_URL='/start/';
+  document.querySelectorAll('[data-start]').forEach(function(a){
+    if(START_URL){a.href=START_URL;if(/^https?:/i.test(START_URL)){a.target='_blank';a.rel='noopener';}}
+    else{a.addEventListener('click',function(e){e.preventDefault();});}
+  });
+})();
+</script>
+</body>
+</html>
