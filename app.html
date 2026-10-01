@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ABEGG</title>
+<meta name="theme-color" content="#066B33">
+<meta name="robots" content="noindex">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+@font-face{font-family:"Nunito";src:url("nunito.woff2") format("woff2");font-weight:200 1000;font-display:swap}
+:root{
+  --font:ui-rounded,"SF Pro Rounded","Nunito","Trebuchet MS",system-ui,sans-serif;
+  --paper:#F3FBF6;--surface:#FFFFFF;--ink:#08281A;--soft:#43604F;--line:#D3E8DB;
+  --brand:#00A651;--deep:#066B33;--lime:#C9F26B;--hero-a:#066B33;--hero-b:#0A8040;
+  --mint:#E6F5EC;--me:#0C7F3B;--danger:#C62D33;--danger-bg:#FADADD;
+  --warn-bg:#FFF1C7;--warn-ink:#6B4F00;--info-bg:#E3EEFB;--info-ink:#1F4B87;--grey-bg:#E6EBE8;
+  --btn-bg:#066B33;--btn-fg:#FFFFFF;--overlay:rgba(4,20,12,.55);
+  --shadow:0 14px 30px -20px rgba(3,40,20,.5);
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#06130C;--surface:#0E2217;--ink:#E7F6EC;--soft:#9FBCAA;--line:#1C3A29;--brand:#19C267;
+  --hero-a:#032614;--hero-b:#054A25;--mint:#173325;--btn-bg:#C9F26B;--btn-fg:#06281A;
+  --danger:#FF7A7F;--danger-bg:#3A1A1C;--warn-bg:#3A300A;--warn-ink:#F2D77A;--info-bg:#12273F;--info-ink:#9CC3F5;--grey-bg:#1B2A22;
+  --shadow:0 14px 30px -20px rgba(0,0,0,.8);
+}}
+*,*::before,*::after{box-sizing:border-box}
+html{background:var(--hero-a)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--font);font-size:1rem;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent}
+[hidden]{display:none !important}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--lime);outline-offset:2px;box-shadow:0 0 0 2px var(--hero-a)}
+h1,h2,h3{margin:0;font-weight:800;letter-spacing:-.02em;line-height:1.15}
+p{margin:0}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.icon{width:24px;height:24px;fill:currentColor;flex:none}
+
+/* shell */
+.shell{max-width:560px;margin:0 auto;min-height:100dvh;background:var(--paper);display:flex;flex-direction:column;position:relative;box-shadow:0 0 0 1px var(--line)}
+.topbar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:12px;color:#fff;
+  padding:calc(env(safe-area-inset-top,0px) + 12px) 14px 14px;background:linear-gradient(180deg,var(--hero-a),var(--hero-b))}
+.topbar .brand{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;font-size:1.25rem}
+.topbar .brand img{border-radius:9px;background:#fff;padding:3px}
+.topbar .ttl{flex:1;min-width:0}
+.topbar h1{font-size:1.15rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.topbar .sub{font-size:.8rem;opacity:.88;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.icon-btn{display:grid;place-items:center;width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.16);color:#fff;cursor:pointer;text-decoration:none;flex:none}
+.icon-btn:hover{background:rgba(255,255,255,.26)}
+main{flex:1;padding:16px 14px calc(110px + env(safe-area-inset-bottom,0px))}
+main.chatmain{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+
+.tabbar{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(560px,100%);z-index:30;
+  display:grid;grid-template-columns:1fr 84px 1fr;align-items:center;background:var(--surface);border-top:1px solid var(--line);
+  padding:8px 10px calc(8px + env(safe-area-inset-bottom,0px))}
+.tab{display:flex;flex-direction:column;align-items:center;gap:2px;text-decoration:none;color:var(--soft);font-size:.78rem;font-weight:700;padding:4px}
+.tab.on{color:var(--brand)}
+.tab-plus{justify-self:center;width:56px;height:56px;border-radius:50%;display:grid;place-items:center;background:var(--lime);color:#06281A;margin-top:-26px;
+  box-shadow:0 12px 24px -10px rgba(3,40,20,.7);border:4px solid var(--paper);text-decoration:none}
+.tab-plus .icon{width:28px;height:28px}
+
+/* cards + text */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:16px;margin-bottom:12px;box-shadow:var(--shadow)}
+.req{display:block;text-decoration:none;color:inherit}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.alias{font-weight:800;font-size:.9rem}
+.time{font-size:.8rem;color:var(--soft)}
+.body{margin-top:8px;font-size:1.04rem;overflow-wrap:anywhere;white-space:pre-wrap}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.tag{font-size:.78rem;font-weight:700;background:var(--mint);color:var(--deep);border-radius:999px;padding:3px 10px}
+@media (prefers-color-scheme:dark){.tag{color:var(--ink)}}
+.foot{margin-top:12px}
+.count{font-size:.85rem;color:var(--soft);font-weight:600}
+.pill{display:inline-block;font-size:.74rem;font-weight:800;border-radius:999px;padding:3px 10px;background:var(--mint);color:var(--deep)}
+.pill.info{background:var(--info-bg);color:var(--info-ink)}
+.pill.warn{background:var(--warn-bg);color:var(--warn-ink)}
+.pill.bad{background:var(--danger-bg);color:var(--danger)}
+.pill.muted{background:var(--grey-bg);color:var(--soft)}
+.pill.done{background:var(--lime);color:#06281A}
+@media (prefers-color-scheme:dark){.pill{color:var(--ink)}}
+.h2{font-size:1.15rem;margin:22px 2px 10px}
+.fine{font-size:.85rem;color:var(--soft);line-height:1.4}
+.note{background:var(--warn-bg);color:var(--warn-ink);border-radius:16px;padding:12px 14px;font-size:.92rem;margin-bottom:12px}
+.note.good{background:var(--mint);color:var(--ink)}
+.empty{text-align:center;padding:36px 12px;color:var(--soft)}
+.empty .big{font-size:2.4rem;line-height:1.1;margin-bottom:8px}
+.empty h3{color:var(--ink);margin-bottom:6px}
+
+/* buttons + forms */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:999px;padding:.75em 1.3em;background:var(--btn-bg);color:var(--btn-fg);font-weight:800;cursor:pointer;text-decoration:none;transition:transform .12s ease,opacity .12s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.btn.small{padding:.45em 1em;font-size:.88rem}
+.btn.block{display:flex;width:100%}
+.btn.lime{background:var(--lime);color:#06281A}
+.btn.ghost{background:transparent;color:var(--ink);border:1.5px solid var(--line)}
+.btn.danger{background:var(--danger-bg);color:var(--danger)}
+.linkbtn{background:none;border:0;padding:8px 0;cursor:pointer;font-weight:700;text-decoration:underline;color:var(--soft)}
+.stack{display:grid;gap:10px}
+.lbl{display:block;font-weight:800;font-size:.9rem;margin:0 0 6px}
+.field{margin-bottom:14px}
+input[type=text],input[type=email],input[type=date],select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);font-size:1rem}
+textarea{resize:vertical;min-height:110px;line-height:1.4}
+input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
+.counter{font-size:.8rem;color:var(--soft);text-align:right;margin-top:4px}
+.seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--mint);gap:2px;margin-bottom:14px}
+.seg button{border:0;background:transparent;border-radius:999px;padding:.45em 1.1em;font-weight:800;color:var(--soft);cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--btn-bg);color:var(--btn-fg)}
+.seg button[disabled]{opacity:.55;cursor:not-allowed}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.filters select{padding:10px 12px;border-radius:999px;font-weight:700;font-size:.9rem}
+.checks{display:flex;flex-wrap:wrap;gap:8px}
+.checks label{display:inline-flex;align-items:center;gap:8px;padding:8px 14px;border:1.5px solid var(--line);border-radius:999px;font-weight:700;font-size:.9rem;cursor:pointer;background:var(--surface)}
+.checks input{accent-color:var(--brand);width:18px;height:18px}
+.menu{list-style:none;margin:0;padding:0}
+.menu a,.menu button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;border-top:1px solid var(--line);padding:16px 4px;font-weight:700;text-decoration:none;cursor:pointer}
+
+/* welcome */
+.welcome{min-height:100dvh;background:linear-gradient(180deg,var(--hero-a) 0,var(--hero-b) 420px,var(--paper) 760px);padding:calc(env(safe-area-inset-top,0px) + 28px) 18px 40px}
+.w-in{max-width:440px;margin:0 auto}
+.w-brand{display:inline-flex;align-items:center;gap:10px;color:#fff;font-weight:800;font-size:1.3rem;text-decoration:none}
+.w-brand img{border-radius:10px;background:#fff;padding:4px}
+.welcome h1{color:#fff;font-size:clamp(2.6rem,12vw,3.6rem);line-height:.98;letter-spacing:-.04em;margin-top:34px}
+.w-sub{color:rgba(255,255,255,.92);font-size:1.12rem;margin:14px 0 26px;max-width:30ch}
+.w-rules{list-style:none;margin:22px 4px 0;padding:0;display:grid;gap:10px;color:var(--ink)}
+.w-rules li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.msg{margin-top:12px;font-size:.92rem;font-weight:700}
+.msg.err{color:var(--danger)}
+.msg.ok{color:var(--deep)}
+@media (prefers-color-scheme:dark){.msg.ok{color:var(--lime)}}
+
+/* chat */
+.thread{display:flex;flex-direction:column;gap:12px}
+.bub{max-width:82%;display:flex;flex-direction:column;gap:3px}
+.bub .who{font-size:.76rem;color:var(--soft);padding:0 6px}
+.bub .b{padding:10px 14px;border-radius:20px;overflow-wrap:anywhere;white-space:pre-wrap;line-height:1.4}
+.bub .t{font-size:.7rem;color:var(--soft);padding:0 6px}
+.bub.me{align-self:flex-end;align-items:flex-end}
+.bub.me .b{background:var(--me);color:#fff;border-radius:20px 20px 5px 20px}
+.bub.them{align-self:flex-start}
+.bub.them .b{background:var(--mint);color:var(--ink);border-radius:20px 20px 20px 5px}
+.composer{position:fixed;left:50%;transform:translateX(-50%);bottom:0;width:min(560px,100%);z-index:30;background:var(--surface);border-top:1px solid var(--line);padding:10px 12px calc(10px + env(safe-area-inset-bottom,0px))}
+.composer .warnline{font-size:.8rem;color:var(--warn-ink);background:var(--warn-bg);border-radius:10px;padding:6px 10px;margin-bottom:8px}
+.composer .line{display:flex;gap:8px;align-items:flex-end}
+.composer textarea{min-height:44px;max-height:120px;padding:10px 14px;border-radius:22px}
+.composer .send{width:46px;height:46px;border-radius:50%;border:0;background:var(--btn-bg);color:var(--btn-fg);display:grid;place-items:center;cursor:pointer;flex:none}
+.composer .send[disabled]{opacity:.4;cursor:not-allowed}
+
+/* overlays */
+.overlay{position:fixed;inset:0;z-index:60;background:var(--overlay);display:flex;align-items:flex-end;justify-content:center}
+.sheet{width:min(560px,100%);background:var(--surface);border-radius:26px 26px 0 0;padding:20px 18px calc(18px + env(safe-area-inset-bottom,0px));max-height:90dvh;overflow:auto}
+.sheet h2{font-size:1.25rem;margin-bottom:8px}
+.sheet .acts{display:flex;gap:10px;margin-top:16px}
+.sheet .acts .btn{flex:1}
+@media (prefers-reduced-motion:no-preference){
+  .sheet{animation:up .22s ease-out}
+  @keyframes up{from{transform:translateY(30px);opacity:.4}to{transform:none;opacity:1}}
+  .skel{animation:pulse 1.2s ease-in-out infinite}
+  @keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(96px + env(safe-area-inset-bottom,0px));z-index:70;background:var(--ink);color:var(--paper);padding:.7em 1.3em;border-radius:999px;font-weight:700;max-width:calc(100vw - 32px);text-align:center;box-shadow:0 18px 36px -18px rgba(0,0,0,.7)}
+.skel{height:92px;border-radius:20px;background:var(--mint);margin-bottom:12px}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="i-back" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></symbol>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8h5z"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></symbol>
+  <symbol id="i-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.31.06-.63.06-.94s-.02-.63-.06-.94l2.03-1.58a.5.5 0 0 0 .12-.64l-1.92-3.32a.5.5 0 0 0-.6-.22l-2.39.96a7.03 7.03 0 0 0-1.63-.94l-.36-2.54A.48.48 0 0 0 13.9 2h-3.84a.48.48 0 0 0-.48.41l-.36 2.54c-.59.24-1.13.56-1.63.94l-2.39-.96a.48.48 0 0 0-.6.22L2.68 8.47a.48.48 0 0 0 .12.64l2.03 1.58c-.04.31-.07.63-.07.94s.03.63.07.94L2.8 14.15a.48.48 0 0 0-.12.64l1.92 3.32c.12.22.37.29.6.22l2.39-.96c.5.38 1.04.7 1.63.94l.36 2.54c.05.24.26.41.48.41h3.84c.24 0 .44-.17.48-.41l.36-2.54c.59-.24 1.13-.56 1.63-.94l2.39.96c.22.08.47 0 .6-.22l1.92-3.32a.48.48 0 0 0-.12-.64l-2.03-1.58zM12 15.6A3.6 3.6 0 1 1 12 8.4a3.6 3.6 0 0 1 0 7.2z"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 24 24"><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-1 15-4-4 1.41-1.41L11 13.17l5.59-5.59L18 9l-7 7z"/></symbol>
+</svg>
+<div id="root"></div>
+<script src="supabase.js"></script>
+<script>
+(function(){
+'use strict';
+/* ====== Your project settings (the publishable key is meant to be public) ====== */
+var SUPABASE_URL='https://byrfpqdyrujfwysgiprt.supabase.co';
+var SUPABASE_KEY='sb_publishable_kcBh5lkA5jhyo2JF39R5wA_KbHwMpbx';
+var SUPPORT_EMAIL='motionbyklever@gmail.com';
+
+var sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+var root=document.getElementById('root');
+var state={session:null,profile:null,cats:[],areas:[],catMap:{},areaMap:{},setupError:false,blocked:null,navId:0,feed:{cat:'',area:''}};
+var cleanupFns=[],bootP=null;
+
+/* ---------------- helpers ---------------- */
+function $(s,r){return (r||document).querySelector(s);}
+function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function icon(id){return '<svg class="icon" aria-hidden="true"><use href="#i-'+id+'"/></svg>';}
+function onLeave(fn){cleanupFns.push(fn);}
+function cleanup(){cleanupFns.forEach(function(f){try{f();}catch(e){}});cleanupFns=[];}
+function plural(n,w){return n+' '+w+(n===1?'':'s');}
+function ago(iso){
+  var s=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/1000));
+  if(s<45)return 'just now'; if(s<3600)return Math.round(s/60)+' min ago';
+  if(s<86400)return Math.round(s/3600)+' h ago'; if(s<86400*7)return Math.round(s/86400)+' d ago';
+  return new Date(iso).toLocaleDateString(undefined,{day:'numeric',month:'short'});
+}
+function clock(iso){return new Date(iso).toLocaleTimeString([],{hour:'numeric',minute:'2-digit'});}
+function neededBy(d){if(!d)return '';var p=d.split('-');return 'Needed by '+new Date(+p[0],+p[1]-1,+p[2]).toLocaleDateString(undefined,{day:'numeric',month:'short'});}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+var LINK_RE=/(https?:\/\/|www\.|\.com\b|\.ng\b|\.net\b|\.org\b)/i;
+function hasContact(t){
+  t=String(t||'');if(LINK_RE.test(t))return true;
+  var s=t.replace(/[\s\-\.\(\)]/g,'');
+  return /(\+?234|0)[789][01]\d{8}/.test(s)||/\d{10,}/.test(s);
+}
+var STATUS={live:['Live',''],in_review:['In review','warn'],in_conversation:['In conversation','info'],fulfilled:['Fulfilled','done'],removed:['Removed','bad'],expired:['Expired','muted'],cancelled:['Cancelled','muted'],draft:['Draft','muted'],sent:['Sent','info'],chosen:['Chosen',''],declined:['Not chosen','muted'],withdrawn:['Withdrawn','muted']};
+function pill(st){var s=STATUS[st]||[st,'muted'];return '<span class="pill '+s[1]+'">'+esc(s[0])+'</span>';}
+function snippet(t,n){t=String(t||'');return t.length>n?t.slice(0,n-1)+'\u2026':t;}
+
+function toast(msg){
+  $$('.toast').forEach(function(t){t.remove();});
+  var t=document.createElement('div');t.className='toast';t.setAttribute('role','status');t.textContent=msg;document.body.appendChild(t);
+  setTimeout(function(){t.remove();},3200);
+}
+function friendly(err){
+  var msg=(err&&err.message)||String(err);
+  if(/Failed to fetch|NetworkError|Load failed|network/i.test(msg))return 'No connection. Check your data or Wi-Fi and try again.';
+  if(err&&(err.code==='PGRST202'||err.code==='PGRST205'||err.code==='42P01'||/Could not find the (function|table)/i.test(msg))){state.setupError=true;return 'The ABEGG database is not set up yet.';}
+  if(/JWT expired|invalid JWT|Please sign in first/i.test(msg))return 'Your session ended. Please sign in again.';
+  if(/rate limit/i.test(msg))return 'Too many sign-in emails were sent. Please wait a while (up to an hour) and try again.';
+  return msg;
+}
+async function rpc(name,args){
+  var r=await sb.rpc(name,args||{});
+  if(r.error){
+    var e=new Error(friendly(r.error));e.raw=r.error;
+    if(/Please sign in first|JWT expired|invalid JWT/i.test(r.error.message)||r.error.code==='28000'){sb.auth.signOut();}
+    throw e;
+  }
+  return r.data;
+}
+
+/* ---------------- overlays ---------------- */
+function openSheet(html,wire){
+  return new Promise(function(resolve){
+    var ov=document.createElement('div');ov.className='overlay';
+    ov.innerHTML='<div class="sheet" role="dialog" aria-modal="true">'+html+'</div>';
+    document.body.appendChild(ov);
+    function close(v){document.removeEventListener('keydown',key);ov.remove();resolve(v);}
+    function key(e){if(e.key==='Escape')close(null);}
+    document.addEventListener('keydown',key);
+    ov.addEventListener('click',function(e){if(e.target===ov)close(null);});
+    wire(ov,close);
+    var f=$('input,textarea,select,button',ov);if(f)f.focus();
+  });
+}
+function confirmBox(title,text,okLabel,danger){
+  return openSheet('<h2>'+esc(title)+'</h2><p class="fine" style="font-size:1rem">'+esc(text)+'</p><div class="acts"><button class="btn ghost" data-v="0">Not now</button><button class="btn '+(danger?'danger':'')+'" data-v="1">'+esc(okLabel)+'</button></div>',
+    function(ov,close){$$('[data-v]',ov).forEach(function(b){b.addEventListener('click',function(){close(b.dataset.v==='1');});});});
+}
+function reportBox(){
+  return openSheet('<h2>Report this</h2><div class="field"><label class="lbl" for="rr">What is wrong?</label><select id="rr"><option value="banned_item">Banned or illegal item</option><option value="scam">Looks like a scam</option><option value="harassment">Harassment or abuse</option><option value="personal_info">Shares personal details</option><option value="other">Something else</option></select></div><div class="field"><label class="lbl" for="rd">Details (optional)</label><textarea id="rd" maxlength="500" style="min-height:80px"></textarea></div><div class="acts"><button class="btn ghost" data-v="0">Cancel</button><button class="btn" data-v="1">Send report</button></div>',
+    function(ov,close){$$('[data-v]',ov).forEach(function(b){b.addEventListener('click',function(){close(b.dataset.v==='1'?{reason:$('#rr',ov).value,details:$('#rd',ov).value.trim()}:null);});});});
+}
+function noteBox(title,label){
+  return openSheet('<h2>'+esc(title)+'</h2><div class="field"><label class="lbl" for="nn">'+esc(label)+'</label><textarea id="nn" maxlength="300" style="min-height:80px"></textarea></div><div class="acts"><button class="btn ghost" data-v="0">Cancel</button><button class="btn danger" data-v="1">Confirm</button></div>',
+    function(ov,close){$$('[data-v]',ov).forEach(function(b){b.addEventListener('click',function(){close(b.dataset.v==='1'?$('#nn',ov).value.trim():null);});});});
+}
+
+/* ---------------- shell ---------------- */
+function shell(o){
+  var left=o.back?'<a class="icon-btn" href="'+o.back+'" aria-label="Back">'+icon('back')+'</a>'
+    :'<a class="brand" href="#/feed"><img src="icon-192.png" alt="" width="32" height="32">ABEGG</a>';
+  var mid=o.title?'<div class="ttl"><h1>'+esc(o.title)+'</h1>'+(o.sub?'<div class="sub">'+esc(o.sub)+'</div>':'')+'</div>':'<div class="ttl"></div>';
+  var tabs=o.tab?'<nav class="tabbar" aria-label="Main"><a class="tab '+(o.tab==='feed'?'on':'')+'" href="#/feed">'+icon('home')+'<span>Feed</span></a><a class="tab-plus" href="#/new" aria-label="New request">'+icon('plus')+'</a><a class="tab '+(o.tab==='mine'?'on':'')+'" href="#/mine">'+icon('list')+'<span>Mine</span></a></nav>':'';
+  root.innerHTML='<div class="shell"><header class="topbar">'+left+mid+(o.right||'')+'</header><main id="main" class="'+(o.mainClass||'')+'">'+(o.body||'')+'</main>'+tabs+(o.composer||'')+'</div>';
+  window.scrollTo(0,0);
+  return $('#main');
+}
+function skeleton(n){var s='';for(var i=0;i<n;i++)s+='<div class="skel"></div>';return s;}
+function errorBlock(msg,retry){
+  return '<div class="empty"><div class="big">&#128533;</div><h3>Something went wrong</h3><p>'+esc(msg)+'</p>'+(retry?'<p style="margin-top:14px"><button class="btn" id="retry">Try again</button></p>':'')+'</div>';
+}
+
+/* ---------------- welcome / sign-in ---------------- */
+function hashNotice(){
+  var h=location.hash||'';
+  if(/error_description=/.test(h)){
+    var m=h.match(/error_description=([^&]+)/);
+    var t=m?decodeURIComponent(m[1].replace(/\+/g,' ')):'';
+    history.replaceState(null,'',location.pathname);
+    if(/expired|invalid/i.test(t))return 'That sign-in link has expired. Enter your email to get a new one.';
+    return t||'';
+  }
+  return '';
+}
+function renderWelcome(){
+  var notice=hashNotice(),pendingEmail='',cool=null;
+  root.innerHTML='<div class="welcome"><div class="w-in">'
+   +'<a class="w-brand" href="/"><img src="icon-192.png" alt="" width="34" height="34">ABEGG</a>'
+   +'<h1>Abegg,<br>who has it?</h1>'
+   +'<p class="w-sub">Ask for what you need. Members who have it reach out. Nobody sees who you are.</p>'
+   +'<div class="card" id="signin">'
+   +'<div id="step1"><label class="lbl" for="email">Your email</label><div class="field"><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div>'
+   +'<button class="btn block" id="send">Send me a sign-in email</button><p class="fine" style="margin-top:10px">No name, photo or username needed. Other members never see your email.</p></div>'
+   +'<div id="step2" hidden><p>We sent a sign-in email to <b id="sentTo"></b>.</p><p class="fine" style="margin:6px 0 14px">Tap the link in that email to sign in. Open it on this same phone or computer. Check your spam folder if you cannot find it.</p>'
+   +'<div id="codewrap" hidden><div class="field"><label class="lbl" for="code">Code from the email</label><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Code"></div><button class="btn block" id="verify" style="margin-bottom:10px">Sign in with code</button></div>'
+   +'<div class="stack"><button class="btn ghost block" id="resend" disabled>Send again</button><button class="linkbtn" id="showcode" type="button">My email has a code</button><button class="linkbtn" id="change" type="button">Use a different email</button></div></div>'
+   +'<p class="msg '+(notice?'err':'')+'" id="msg" role="status">'+esc(notice)+'</p></div>'
+   +'<ul class="w-rules"><li><span aria-hidden="true">&#128205;</span><span>Meet in busy public places.</span></li><li><span aria-hidden="true">&#128176;</span><span>Never pay before you have seen the item.</span></li><li><span aria-hidden="true">&#128683;</span><span>No weapons, drugs or anything illegal.</span></li></ul>'
+   +'<p class="fine" style="margin:22px 4px 0"><a href="/">Back to the website</a></p></div></div>';
+  var msg=$('#msg');
+  function say(t,kind){msg.textContent=t||'';msg.className='msg '+(kind||'');}
+  function startCooldown(){
+    var left=45,b=$('#resend');b.disabled=true;
+    clearInterval(cool);cool=setInterval(function(){left--;if(left<=0){clearInterval(cool);b.disabled=false;b.textContent='Send again';}else b.textContent='Send again in '+left+'s';},1000);
+    b.textContent='Send again in '+left+'s';
+  }
+  onLeave(function(){clearInterval(cool);});
+  async function send(){
+    var email=$('#email').value.trim().toLowerCase();
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){say('Enter a valid email address.','err');return;}
+    var btn=$('#send');btn.disabled=true;say('Sending...','');
+    var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+    btn.disabled=false;
+    if(r.error){say(friendly(r.error),'err');return;}
+    pendingEmail=email;$('#sentTo').textContent=email;$('#step1').hidden=true;$('#step2').hidden=false;say('Email sent. Check your inbox and spam folder.','ok');startCooldown();
+  }
+  async function verify(){
+    var token=$('#code').value.replace(/\s/g,'');
+    if(!/^\d{6,10}$/.test(token)){say('Type the code from the email, or tap the link in it.','err');return;}
+    var btn=$('#verify');btn.disabled=true;say('Checking...','');
+    var r=await sb.auth.verifyOtp({email:pendingEmail,token:token,type:'email'});
+    btn.disabled=false;
+    if(r.error){say('That code did not work. Check it, or send a new one.','err');}
+  }
+  $('#send').addEventListener('click',send);
+  $('#email').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  $('#verify').addEventListener('click',verify);
+  $('#showcode').addEventListener('click',function(){$('#codewrap').hidden=false;this.hidden=true;$('#code').focus();});
+  $('#code').addEventListener('keydown',function(e){if(e.key==='Enter')verify();});
+  $('#resend').addEventListener('click',async function(){
+    $('#resend').disabled=true;var r=await sb.auth.signInWithOtp({email:pendingEmail,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
+    if(r.error){say(friendly(r.error),'err');$('#resend').disabled=false;}else{say('Sent again.','ok');startCooldown();}
+  });
+  $('#change').addEventListener('click',function(){clearInterval(cool);$('#step2').hidden=true;$('#step1').hidden=false;$('#codewrap').hidden=true;$('#showcode').hidden=false;say('');});
+}
+
+/* ---------------- boot ---------------- */
+async function boot(){
+  state.setupError=false;state.blocked=null;
+  try{
+    var rs=await Promise.all([sb.from('categories').select('id,slug,label').eq('active',true).order('sort'),sb.from('areas').select('id,slug,label').eq('active',true).order('sort')]);
+    if(rs[0].error)throw rs[0].error; if(rs[1].error)throw rs[1].error;
+    state.cats=rs[0].data;state.areas=rs[1].data;state.catMap={};state.areaMap={};
+    state.cats.forEach(function(c){state.catMap[c.id]=c.label;});state.areas.forEach(function(a){state.areaMap[a.id]=a.label;});
+    var p=await rpc('get_my_profile');state.profile=(p&&p[0])||null;
+  }catch(e){
+    var m=(e&&e.message)||'';
+    if(/suspended|not allowed to use/i.test(m)){state.blocked=m;}
+    else if(state.setupError||(e&&(e.code==='PGRST205'||e.code==='PGRST202'||e.code==='42P01'))){state.setupError=true;}
+    else{state.bootError=friendly(e);}
+  }
+}
+function ensureBoot(){return bootP||(bootP=boot());}
+
+function renderSetup(){
+  shell({title:'Almost ready',body:'<div class="card"><h2>The database is not set up yet</h2><p class="fine" style="margin-top:8px;font-size:1rem">In Supabase, open the SQL Editor, paste the whole <b>abegg_schema.sql</b> file, run it, then reload this page.</p><p style="margin-top:14px"><button class="btn" id="reload">Reload</button></p></div>'});
+  $('#reload').addEventListener('click',function(){location.reload();});
+}
+function renderBlocked(){
+  shell({title:'ABEGG',body:'<div class="card"><h2>You cannot use ABEGG right now</h2><p style="margin-top:8px">'+esc(state.blocked)+'</p><p class="fine" style="margin-top:8px">If you think this is a mistake, email '+esc(SUPPORT_EMAIL)+'.</p><p style="margin-top:14px"><button class="btn ghost" id="out">Sign out</button></p></div>'});
+  $('#out').addEventListener('click',function(){sb.auth.signOut();});
+}
+function renderBootError(){
+  shell({title:'ABEGG',body:errorBlock(state.bootError||'Please try again.',true)});
+  $('#retry').addEventListener('click',function(){bootP=null;state.bootError=null;start();});
+}
+
+/* ---------------- onboarding ---------------- */
+function renderOnboarding(){
+  var chosen=(state.profile&&state.profile.followed_category_ids)||[];
+  var main=shell({title:'Welcome to ABEGG',body:
+    '<div class="card"><h2>Before you start</h2><ul class="w-rules" style="margin:12px 0 0"><li><span aria-hidden="true">&#128205;</span><span>Meet in busy public places and go with a friend when you can.</span></li><li><span aria-hidden="true">&#128176;</span><span>Check the item before you pay. Never pay in advance.</span></li><li><span aria-hidden="true">&#128683;</span><span>No weapons, drugs, adult content, stolen goods or documents.</span></li><li><span aria-hidden="true">&#129323;</span><span>You appear to others only as a random alias.</span></li></ul></div>'
+    +'<div class="card"><div class="field"><label class="lbl" for="ar">Where are you?</label><select id="ar"><option value="">Choose your area</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div>'
+    +'<div class="field"><span class="lbl">What do you want to hear about?</span><div class="checks">'+state.cats.map(function(c){return '<label><input type="checkbox" value="'+c.id+'" '+(chosen.indexOf(c.id)>-1?'checked':'')+'>'+esc(c.label)+'</label>';}).join('')+'</div></div>'
+    +'<button class="btn block" id="go">Continue</button><p class="msg err" id="msg"></p></div>'});
+  $('#go').addEventListener('click',async function(){
+    var area=$('#ar').value;if(!area){$('#msg').textContent='Choose your area first.';return;}
+    var cats=$$('.checks input:checked',main).map(function(i){return +i.value;});
+    this.disabled=true;
+    try{await rpc('update_my_settings',{p_area:+area,p_categories:cats});state.profile={area_id:+area,followed_category_ids:cats,role:state.profile&&state.profile.role};sessionStorage.setItem('abegg_onboarded','1');location.hash='#/feed';route();}
+    catch(e){$('#msg').textContent=e.message;this.disabled=false;}
+  });
+}
+
+/* ---------------- feed ---------------- */
+function reqCard(r){
+  var cat=state.catMap[r.category_id]||'',area=state.areaMap[r.area_id]||'';
+  var tags='<span class="tag">'+esc(cat)+'</span><span class="tag">'+esc(area)+'</span>'+(r.needed_by?'<span class="tag">'+esc(neededBy(r.needed_by))+'</span>':'')+(r.budget_text?'<span class="tag">'+esc(r.budget_text)+'</span>':'');
+  var act=r.is_mine?'<span class="pill info">Your request</span>':(r.i_offered?'<span class="pill">You offered</span>':'<span class="btn small">I have this</span>');
+  return '<a class="card req" href="#/request/'+r.id+'"><div class="row"><span class="alias">'+esc(r.alias_label)+'</span><span class="time">'+esc(ago(r.created_at))+'</span></div><p class="body">'+esc(r.body)+'</p><div class="tags">'+tags+'</div><div class="row foot"><span class="count">'+esc(plural(+r.offer_count,'offer'))+'</span>'+act+'</div></a>';
+}
+async function renderFeed(){
+  var my=++state.navId;
+  var main=shell({tab:'feed',right:'<a class="icon-btn" href="#/settings" aria-label="Settings">'+icon('gear')+'</a>',body:
+    '<div class="filters"><label class="sr" for="fc">Category</label><select id="fc"><option value="">All categories</option>'+state.cats.map(function(c){return '<option value="'+c.id+'">'+esc(c.label)+'</option>';}).join('')+'</select><label class="sr" for="fa">Area</label><select id="fa"><option value="">All areas</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div><div id="list">'+skeleton(3)+'</div><div id="more" style="text-align:center"></div>'});
+  $('#fc').value=state.feed.cat;$('#fa').value=state.feed.area;
+  var before=null,list=$('#list'),more=$('#more');
+  async function load(reset){
+    if(reset){before=null;list.innerHTML=skeleton(3);more.innerHTML='';}
+    try{
+      var rows=await rpc('list_feed',{p_category:state.feed.cat?+state.feed.cat:null,p_area:state.feed.area?+state.feed.area:null,p_limit:20,p_before:before});
+      if(my!==state.navId)return;
+      if(reset)list.innerHTML='';
+      if(!rows.length&&reset){list.innerHTML='<div class="empty"><div class="big">&#128064;</div><h3>No requests here yet</h3><p>Be the first to ask for something.</p><p style="margin-top:14px"><a class="btn lime" href="#/new">New request</a></p></div>';return;}
+      list.insertAdjacentHTML('beforeend',rows.map(reqCard).join(''));
+      if(rows.length){before=rows[rows.length-1].created_at;}
+      more.innerHTML=rows.length>=20?'<button class="btn ghost" id="loadmore">Load more</button>':'';
+      var lm=$('#loadmore');if(lm)lm.addEventListener('click',function(){this.disabled=true;load(false);});
+    }catch(e){if(my!==state.navId)return;list.innerHTML=errorBlock(e.message,true);var rt=$('#retry');if(rt)rt.addEventListener('click',function(){load(true);});}
+  }
+  $('#fc').addEventListener('change',function(){state.feed.cat=this.value;load(true);});
+  $('#fa').addEventListener('change',function(){state.feed.area=this.value;load(true);});
+  load(true);
+}
+
+/* ---------------- new request ---------------- */
+function renderNew(){
+  var my=++state.navId;
+  var areaPref=(state.profile&&state.profile.area_id)||'';
+  var main=shell({back:'#/feed',title:'New request',tab:'feed',body:
+    '<div class="card"><div class="seg" role="group" aria-label="How do you want to ask?"><button type="button" aria-pressed="true">Type</button><button type="button" disabled title="Voice notes are coming soon">Voice soon</button></div>'
+    +'<div class="field"><label class="lbl" for="rb">What do you need?</label><textarea id="rb" maxlength="500" placeholder="I need a green dress, size 12, for a wedding this Saturday"></textarea><div class="counter"><span id="cnt">0</span>/500</div></div>'
+    +'<div class="field"><label class="lbl" for="rc">Category</label><select id="rc"><option value="">Choose a category</option>'+state.cats.map(function(c){return '<option value="'+c.id+'">'+esc(c.label)+'</option>';}).join('')+'</select></div>'
+    +'<div class="field"><label class="lbl" for="ra">Area</label><select id="ra"><option value="">Choose an area</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div>'
+    +'<div class="field"><label class="lbl" for="rn">Needed by (optional)</label><input id="rn" type="date" min="'+today()+'"></div>'
+    +'<div class="field"><label class="lbl" for="rg">Budget (optional)</label><input id="rg" type="text" maxlength="40" placeholder="For example N20,000"></div>'
+    +'<p class="fine" style="margin-bottom:14px">You will appear under a random one-time alias. Please keep phone numbers and links out. You can share details later, in the chat, once you both agree.</p>'
+    +'<button class="btn block" id="post">Post request</button><p class="msg err" id="msg" role="status"></p></div>'});
+  $('#ra').value=areaPref;
+  var rb=$('#rb');rb.addEventListener('input',function(){$('#cnt').textContent=rb.value.length;});
+  $('#post').addEventListener('click',async function(){
+    var msg=$('#msg');msg.textContent='';msg.className='msg err';
+    var body=rb.value.trim(),cat=$('#rc').value,area=$('#ra').value;
+    if(body.length<10){msg.textContent='Tell us a little more (at least 10 characters).';return;}
+    if(hasContact(body)){msg.textContent='Please keep phone numbers and links out of your request.';return;}
+    if(!cat){msg.textContent='Choose a category.';return;}
+    if(!area){msg.textContent='Choose an area.';return;}
+    this.disabled=true;
+    try{
+      var id=await rpc('create_request',{p_body:body,p_category:+cat,p_area:+area,p_needed_by:$('#rn').value||null,p_budget:$('#rg').value.trim()||null});
+      if(my!==state.navId)return;
+      toast('Request posted');location.hash='#/request/'+id;
+    }catch(e){msg.textContent=e.message;this.disabled=false;}
+  });
+}
+
+/* ---------------- request detail ---------------- */
+async function renderRequest(id){
+  var my=++state.navId;
+  var main=shell({back:'#/feed',title:'Request',tab:'feed',body:skeleton(2)});
+  try{
+    var rows=await rpc('get_request',{p_request:id});
+    if(my!==state.navId)return;
+    if(!rows.length){main.innerHTML='<div class="empty"><div class="big">&#128566;</div><h3>This request is not available</h3><p>It may have been taken, closed or removed.</p><p style="margin-top:14px"><a class="btn" href="#/feed">Back to the feed</a></p></div>';return;}
+    var r=rows[0];
+    var cat=state.catMap[r.category_id]||'',area=state.areaMap[r.area_id]||'';
+    var tags='<span class="tag">'+esc(cat)+'</span><span class="tag">'+esc(area)+'</span>'+(r.needed_by?'<span class="tag">'+esc(neededBy(r.needed_by))+'</span>':'')+(r.budget_text?'<span class="tag">'+esc(r.budget_text)+'</span>':'');
+    var html='<div class="card"><div class="row"><span class="alias">'+esc(r.alias_label)+'</span>'+(r.is_mine||r.status!=='live'?pill(r.status):'<span class="time">'+esc(ago(r.created_at))+'</span>')+'</div><p class="body">'+esc(r.body)+'</p><div class="tags">'+tags+'</div></div>';
+    if(r.is_mine){
+      if(r.status==='in_review')html+='<div class="note">Your request is waiting for a quick check by a moderator. It will go live once approved.</div>';
+      if(r.status==='removed')html+='<div class="note">This request was removed because it broke the ABEGG rules.</div>';
+      html+='<h2 class="h2">Offers (<span id="ocount">'+(+r.offer_count)+'</span>)</h2><div id="offers">'+skeleton(1)+'</div><div id="owneracts"></div>';
+      main.innerHTML=html;
+      var lastOffKey='';
+      function offersHtml(offs){
+        return offs.length?offs.map(function(o){
+          return '<a class="card req" href="#/chat/'+o.id+'"><div class="row"><span class="alias">'+esc(o.alias_label)+'</span>'+(o.status==='chosen'?pill('chosen'):'<span class="time">'+esc(ago(o.created_at))+'</span>')+'</div><p class="body">'+esc(o.message)+'</p><div class="row foot"><span class="count">'+esc(plural(+o.message_count,'message'))+'</span><span class="btn small">Open chat</span></div></a>';
+        }).join(''):'<div class="empty"><div class="big">&#9203;</div><h3>No offers yet</h3><p>Members who have it will reach out here.</p></div>';
+      }
+      async function refreshOffers(){
+        try{
+          var offs=await rpc('list_offers',{p_request:id});if(my!==state.navId)return;
+          var key=offs.map(function(o){return o.id+o.status+o.message_count;}).join('|');
+          if(key===lastOffKey)return;lastOffKey=key;
+          $('#offers').innerHTML=offersHtml(offs);$('#ocount').textContent=offs.length;
+        }catch(e){if(!lastOffKey)$('#offers').innerHTML=errorBlock(e.message,false);}
+      }
+      await refreshOffers();
+      var offTimer=setInterval(function(){if(!document.hidden)refreshOffers();},10000);onLeave(function(){clearInterval(offTimer);});
+      var acts='';
+      if(r.status==='live'||r.status==='in_conversation'){
+        acts+='<h2 class="h2">Manage</h2><div class="stack">';
+        if(r.status==='in_conversation')acts+='<button class="btn" data-act="fulfilled">Mark as fulfilled</button><button class="btn ghost" data-act="reopen">Not working out, reopen it</button>';
+        if(r.status==='live')acts+='<button class="btn ghost" data-act="cancelled">Cancel this request</button>';
+        acts+='</div>';
+      }
+      $('#owneracts').innerHTML=acts;
+      $$('[data-act]',main).forEach(function(b){b.addEventListener('click',async function(){
+        var a=b.dataset.act;
+        var ok=await confirmBox(a==='fulfilled'?'Mark as fulfilled?':a==='reopen'?'Reopen this request?':'Cancel this request?',a==='fulfilled'?'Use this when you have received the item.':a==='reopen'?'The chosen offer is dropped and members can offer again.':'Members will no longer see it.',a==='fulfilled'?'Yes, fulfilled':a==='reopen'?'Yes, reopen':'Yes, cancel',a==='cancelled');
+        if(!ok)return;
+        try{if(a==='reopen')await rpc('reopen_request',{p_request:id});else await rpc('close_request',{p_request:id,p_status:a});toast('Done');renderRequest(id);}catch(e){toast(e.message);}
+      });});
+    }else{
+      if(r.my_offer_id){html+='<a class="btn block" href="#/chat/'+r.my_offer_id+'">Open your chat</a>';}
+      else if(r.status==='live'){
+        html+='<div class="card"><h2 style="font-size:1.1rem">I have this</h2><p class="fine" style="margin:6px 0 12px">Tell them what you have. You will appear under a random alias, and so will they. Keep phone numbers and links out for now.</p><div class="field"><label class="sr" for="om">Your message</label><textarea id="om" maxlength="500" placeholder="I have one in size 12, worn once. Want to see photos or meet?"></textarea><div class="counter"><span id="ocnt">0</span>/500</div></div><button class="btn block" id="sendoffer">Send offer</button><p class="msg err" id="msg" role="status"></p></div>';
+      }else html+='<div class="note">This request is no longer open.</div>';
+      html+='<p style="text-align:center;margin-top:8px"><button class="linkbtn" id="rep">Report this request</button></p>';
+      main.innerHTML=html;
+      var om=$('#om');
+      if(om){
+        om.addEventListener('input',function(){$('#ocnt').textContent=om.value.length;});
+        $('#sendoffer').addEventListener('click',async function(){
+          var t=om.value.trim(),msg=$('#msg');msg.textContent='';
+          if(!t){msg.textContent='Write a short message first.';return;}
+          if(hasContact(t)){msg.textContent='Please keep phone numbers and links out. Share details in the chat once you both agree.';return;}
+          this.disabled=true;
+          try{var oid=await rpc('make_offer',{p_request:id,p_message:t});toast('Offer sent');location.hash='#/chat/'+oid;}
+          catch(e){msg.textContent=e.message;this.disabled=false;}
+        });
+      }
+      $('#rep').addEventListener('click',async function(){
+        var v=await reportBox();if(!v)return;
+        try{await rpc('report_content',{p_type:'request',p_id:id,p_reason:v.reason,p_details:v.details||null});toast('Thanks. A moderator will take a look.');}catch(e){toast(e.message);}
+      });
+    }
+  }catch(e){if(my!==state.navId)return;main.innerHTML=errorBlock(e.message,true);var rt=$('#retry');if(rt)rt.addEventListener('click',function(){renderRequest(id);});}
+}
+
+/* ---------------- mine ---------------- */
+async function renderMine(){
+  var my=++state.navId,tabSel=sessionStorage.getItem('abegg_mine')||'requests';
+  var main=shell({title:'Mine',tab:'mine',body:'<div class="seg" role="group" aria-label="Show"><button type="button" id="t1" aria-pressed="'+(tabSel==='requests')+'">My requests</button><button type="button" id="t2" aria-pressed="'+(tabSel==='offers')+'">My offers</button></div><div id="list">'+skeleton(2)+'</div>'});
+  async function load(){
+    var list=$('#list');list.innerHTML=skeleton(2);
+    try{
+      if(tabSel==='requests'){
+        var rows=await rpc('list_my_requests');if(my!==state.navId)return;
+        list.innerHTML=rows.length?rows.map(function(r){return '<a class="card req" href="#/request/'+r.id+'"><div class="row"><span class="alias">'+esc(r.alias_label)+'</span>'+pill(r.status)+'</div><p class="body">'+esc(snippet(r.body,140))+'</p><div class="row foot"><span class="count">'+esc(plural(+r.offer_count,'offer'))+'</span><span class="time">'+esc(ago(r.created_at))+'</span></div></a>';}).join(''):'<div class="empty"><div class="big">&#128221;</div><h3>No requests yet</h3><p>Ask for something and it will show up here.</p><p style="margin-top:14px"><a class="btn lime" href="#/new">New request</a></p></div>';
+      }else{
+        var offs=await rpc('list_my_offers');if(my!==state.navId)return;
+        list.innerHTML=offs.length?offs.map(function(o){return '<a class="card req" href="#/chat/'+o.id+'"><div class="row"><span class="alias">Your offer</span>'+pill(o.status)+'</div><p class="body">'+esc(snippet(o.message,120))+'</p><p class="fine" style="margin-top:8px">For: '+esc(snippet(o.request_body,90))+'</p><div class="row foot"><span class="time">'+esc(ago(o.created_at))+'</span><span class="btn small">Open chat</span></div></a>';}).join(''):'<div class="empty"><div class="big">&#129309;</div><h3>No offers yet</h3><p>When you offer something in the feed, it shows up here.</p><p style="margin-top:14px"><a class="btn lime" href="#/feed">Browse requests</a></p></div>';
+      }
+    }catch(e){if(my!==state.navId)return;list.innerHTML=errorBlock(e.message,true);var rt=$('#retry');if(rt)rt.addEventListener('click',load);}
+  }
+  function pick(t){tabSel=t;sessionStorage.setItem('abegg_mine',t);$('#t1').setAttribute('aria-pressed',t==='requests');$('#t2').setAttribute('aria-pressed',t==='offers');load();}
+  $('#t1').addEventListener('click',function(){pick('requests');});$('#t2').addEventListener('click',function(){pick('offers');});
+  load();
+}
+
+/* ---------------- chat ---------------- */
+async function renderChat(offerId){
+  var my=++state.navId;
+  var main=shell({back:'#/mine',title:'Chat',noTabs:true,mainClass:'chatmain',body:skeleton(2)});
+  var offer=null,lastKey='',sending=false;
+  try{
+    var o=await rpc('get_offer',{p_offer:offerId});if(my!==state.navId)return;offer=o[0];
+  }catch(e){main.innerHTML=errorBlock(e.message,false)+'<p style="text-align:center"><a class="btn" href="#/mine">Back</a></p>';return;}
+  var other=offer.i_am_owner?offer.offer_alias_label:offer.request_alias_label;
+  function open(){return (offer.status==='sent'||offer.status==='chosen')&&(offer.request_status==='live'||offer.request_status==='in_conversation');}
+  function drawChat(){
+    var back=offer.i_am_owner?'#/request/'+offer.request_id:'#/request/'+offer.request_id;
+    var html='<div class="card"><div class="row"><span class="alias">About this request</span>'+pill(offer.request_status)+'</div><p class="body" style="font-size:.95rem">'+esc(offer.request_body)+'</p></div>';
+    if(!offer.i_am_owner)html+='<div class="card"><div class="row"><span class="alias">Your offer</span>'+pill(offer.status)+'</div><p class="body" style="font-size:.95rem">'+esc(offer.message)+'</p></div>';
+    if(offer.i_am_owner&&offer.status==='sent'&&offer.request_status==='live')html+='<div class="note good"><b>Happy with this offer?</b> Choose it and the other members are told it is taken.<div style="margin-top:10px"><button class="btn small" id="choose">This one</button></div></div>';
+    if(offer.i_am_owner&&offer.status==='chosen'&&offer.request_status==='in_conversation')html+='<div class="note good"><b>You chose this offer.</b> Agree a busy public place and a time, then mark it done.<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap"><button class="btn small" id="done">Mark as fulfilled</button><button class="btn small ghost" id="reopen">Reopen</button></div></div>';
+    if(!offer.i_am_owner&&offer.status==='chosen'&&offer.request_status==='in_conversation')html+='<div class="note good"><b>You were chosen.</b> Agree a busy public place and a time here in the chat.</div>';
+    if(offer.request_status==='fulfilled')html+='<div class="note good">This request was fulfilled. Thank you for using ABEGG.</div>';
+    if(!open()&&offer.request_status!=='fulfilled')html+='<div class="note">This conversation is closed.</div>';
+    html+='<div class="thread" id="thread" aria-live="polite"></div>';
+    main.innerHTML=html;
+    var comp=document.createElement('div');comp.className='composer';comp.id='composer';
+    comp.innerHTML=open()?'<div class="warnline" id="warn" hidden>Keep your number and links out of the chat until you both agree to meet.</div><div class="line"><label class="sr" for="mt">Message</label><textarea id="mt" rows="1" maxlength="1000" placeholder="Write a message"></textarea><button class="send" id="sendm" aria-label="Send" disabled>'+icon('send')+'</button></div>':'';
+    var old=$('#composer');if(old)old.remove();
+    if(open())$('.shell').appendChild(comp);
+    // top bar
+    $('.topbar .ttl').innerHTML='<h1>'+esc(other)+'</h1><div class="sub">'+esc(snippet(offer.request_body,50))+'</div>';
+    var rt=$('.topbar .icon-btn');if(rt)rt.setAttribute('href',back);
+    if(!$('#menubtn')){var mb=document.createElement('button');mb.className='icon-btn';mb.id='menubtn';mb.setAttribute('aria-label','More');mb.innerHTML=icon('dots');$('.topbar').appendChild(mb);mb.addEventListener('click',openMenu);}
+    var ch=$('#choose');if(ch)ch.addEventListener('click',async function(){
+      var ok=await confirmBox('Choose this offer?','Other members who offered will be told this request is taken.','Yes, this one');if(!ok)return;
+      try{await rpc('choose_offer',{p_offer:offerId});toast('Chosen');await reloadOffer();}catch(e){toast(e.message);}
+    });
+    var dn=$('#done');if(dn)dn.addEventListener('click',async function(){
+      var ok=await confirmBox('Mark as fulfilled?','Use this when you have received the item.','Yes, fulfilled');if(!ok)return;
+      try{await rpc('close_request',{p_request:offer.request_id,p_status:'fulfilled'});toast('Marked as fulfilled');await reloadOffer();}catch(e){toast(e.message);}
+    });
+    var ro=$('#reopen');if(ro)ro.addEventListener('click',async function(){
+      var ok=await confirmBox('Reopen this request?','The chosen offer is dropped and members can offer again.','Yes, reopen');if(!ok)return;
+      try{await rpc('reopen_request',{p_request:offer.request_id});toast('Request reopened');location.hash='#/request/'+offer.request_id;}catch(e){toast(e.message);}
+    });
+    var mt=$('#mt'),sm=$('#sendm');
+    if(mt){
+      mt.addEventListener('input',function(){
+        mt.style.height='auto';mt.style.height=Math.min(mt.scrollHeight,120)+'px';
+        sm.disabled=!mt.value.trim()||sending;$('#warn').hidden=!hasContact(mt.value);
+      });
+      mt.addEventListener('keydown',function(e){if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)&&!sm.disabled)send();});
+      sm.addEventListener('click',send);
+    }
+    lastKey='';loadThread(true);
+  }
+  async function reloadOffer(){var o=await rpc('get_offer',{p_offer:offerId});if(my!==state.navId)return;offer=o[0];drawChat();}
+  async function loadThread(first){
+    try{
+      var rows=await rpc('get_thread',{p_offer:offerId});if(my!==state.navId)return;
+      var key=rows.length+':'+(rows.length?rows[rows.length-1].id:'');
+      if(key===lastKey)return;lastKey=key;
+      var th=$('#thread');if(!th)return;
+      th.innerHTML=rows.length?rows.map(function(m){
+        return '<div class="bub '+(m.is_mine?'me':'them')+'">'+(m.is_mine?'':'<span class="who">'+esc(m.alias_label)+'</span>')+'<div class="b">'+esc(m.body)+'</div><span class="t">'+esc(clock(m.created_at))+'</span></div>';
+      }).join(''):'<p class="fine" style="text-align:center;padding:18px 0">No messages yet. Say hello and agree a time and a busy public place.</p>';
+      window.scrollTo({top:document.body.scrollHeight,behavior:first?'auto':'smooth'});
+    }catch(e){/* keep the last good thread on screen */}
+  }
+  async function send(){
+    var mt=$('#mt'),sm=$('#sendm');var t=mt.value.trim();if(!t||sending)return;
+    sending=true;sm.disabled=true;
+    try{await rpc('send_message',{p_offer:offerId,p_body:t});mt.value='';mt.style.height='auto';$('#warn').hidden=true;await loadThread(false);}
+    catch(e){toast(e.message);}
+    sending=false;sm.disabled=!mt.value.trim();
+  }
+  async function openMenu(){
+    var items='<ul class="menu"><li><button data-m="report">Report this chat</button></li><li><button data-m="block">Block this person</button></li>'+(!offer.i_am_owner&&(offer.status==='sent'||offer.status==='chosen')?'<li><button data-m="withdraw">Withdraw my offer</button></li>':'')+'</ul>';
+    var pick=await openSheet('<h2>Options</h2>'+items,function(ov,close){$$('[data-m]',ov).forEach(function(b){b.addEventListener('click',function(){close(b.dataset.m);});});});
+    if(pick==='report'){
+      var v=await reportBox();if(!v)return;
+      try{await rpc('report_content',{p_type:'offer',p_id:offerId,p_reason:v.reason,p_details:v.details||null});toast('Thanks. A moderator will take a look.');}catch(e){toast(e.message);}
+    }else if(pick==='block'){
+      var ok=await confirmBox('Block this person?','You will not see each other\u2019s requests or messages again. They are not told.','Block',true);if(!ok)return;
+      try{await rpc('block_other_party',{p_offer:offerId});toast('Blocked');location.hash='#/feed';}catch(e){toast(e.message);}
+    }else if(pick==='withdraw'){
+      var ok2=await confirmBox('Withdraw your offer?','The chat will close.','Withdraw',true);if(!ok2)return;
+      try{await rpc('withdraw_offer',{p_offer:offerId});toast('Offer withdrawn');await reloadOffer();}catch(e){toast(e.message);}
+    }
+  }
+  drawChat();
+  var ch=sb.channel('chat-'+offerId).on('postgres_changes',{event:'INSERT',schema:'public',table:'messages',filter:'offer_id=eq.'+offerId},function(){loadThread(false);}).subscribe();
+  onLeave(function(){sb.removeChannel(ch);});
+  var timer=setInterval(function(){if(!document.hidden)loadThread(false);},6000);onLeave(function(){clearInterval(timer);});
+}
+
+/* ---------------- settings, safety, moderation ---------------- */
+function renderSettings(){
+  var my=++state.navId;
+  var p=state.profile||{},chosen=p.followed_category_ids||[];
+  var isMod=p.role==='moderator'||p.role==='admin';
+  var main=shell({back:'#/feed',title:'Settings',tab:'feed',body:
+    '<div class="card"><div class="field"><label class="lbl" for="ar">Your area</label><select id="ar"><option value="">Choose your area</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div>'
+    +'<div class="field"><span class="lbl">Categories you want to hear about</span><div class="checks">'+state.cats.map(function(c){return '<label><input type="checkbox" value="'+c.id+'" '+(chosen.indexOf(c.id)>-1?'checked':'')+'>'+esc(c.label)+'</label>';}).join('')+'</div><p class="fine" style="margin-top:8px">Alerts are coming soon. Your choices are saved for when they arrive.</p></div>'
+    +'<button class="btn block" id="save">Save</button><p class="msg" id="msg" role="status"></p></div>'
+    +'<div class="card"><ul class="menu"><li><a href="#/safety" style="border-top:0">'+icon('shield')+'Safety centre</a></li>'+(isMod?'<li><a href="#/mod">'+icon('list')+'Moderation queue</a></li>':'')
+    +'<li><a href="mailto:'+esc(SUPPORT_EMAIL)+'?subject=Delete%20my%20ABEGG%20account">Delete my account and data</a></li><li><button id="out">Sign out</button></li></ul></div>'
+    +'<p class="fine" style="text-align:center">ABEGG beta</p>'});
+  $('#ar').value=p.area_id||'';
+  $('#save').addEventListener('click',async function(){
+    var cats=$$('.checks input:checked',main).map(function(i){return +i.value;}),area=$('#ar').value;
+    this.disabled=true;var msg=$('#msg');
+    try{await rpc('update_my_settings',{p_area:area?+area:null,p_categories:cats});state.profile=Object.assign({},p,{area_id:area?+area:null,followed_category_ids:cats});msg.className='msg ok';msg.textContent='Saved.';}
+    catch(e){msg.className='msg err';msg.textContent=e.message;}
+    this.disabled=false;
+  });
+  $('#out').addEventListener('click',function(){sb.auth.signOut();});
+}
+function renderSafety(){
+  ++state.navId;
+  shell({back:'#/settings',title:'Safety centre',tab:'feed',body:
+   '<div class="card"><h2>Stay safe</h2><ul class="w-rules" style="margin:12px 0 0"><li><span aria-hidden="true">&#128205;</span><span>Meet in a busy public place and go with a friend when you can.</span></li><li><span aria-hidden="true">&#128269;</span><span>Check the item before you pay. Never pay in advance.</span></li><li><span aria-hidden="true">&#129300;</span><span>Be careful with prices that look too good, and with anyone who refuses to show photos or details.</span></li><li><span aria-hidden="true">&#128241;</span><span>Keep the first conversation inside ABEGG. Be wary of anyone who pushes you to another app straight away.</span></li></ul></div>'
+   +'<div class="card"><h2>Not allowed on ABEGG</h2><ul class="w-rules" style="margin:12px 0 0"><li><span aria-hidden="true">&#128683;</span><span>Weapons, drugs, adult content and stolen goods.</span></li><li><span aria-hidden="true">&#128683;</span><span>Identity documents, bank cards and anything illegal in Nigeria.</span></li><li><span aria-hidden="true">&#128683;</span><span>Asking for money before the item has been seen.</span></li></ul></div>'
+   +'<div class="card"><h2>How anonymity works</h2><p style="margin-top:8px">Other members only see a random alias that changes with every request. Your email stays private. ABEGG itself still needs to know which account is behind an alias so it can stop scams and abuse, and only moderators can act on that when it is needed.</p></div>'
+   +'<div class="card"><h2>Something wrong?</h2><p style="margin-top:8px">Use <b>Report</b> on any request or chat, or <b>Block</b> a person from the chat menu. You can also email '+esc(SUPPORT_EMAIL)+'.</p></div>'});
+}
+async function renderMod(){
+  var my=++state.navId;
+  var main=shell({back:'#/settings',title:'Moderation',tab:'feed',body:skeleton(2)});
+  async function load(){
+    try{
+      var rows=await rpc('mod_review_queue');if(my!==state.navId)return;
+      main.innerHTML=rows.length?rows.map(function(r){return '<div class="card" data-id="'+r.id+'"><div class="row"><span class="alias">'+esc(r.alias_label)+'</span><span class="time">'+esc(ago(r.created_at))+'</span></div><p class="body">'+esc(r.body)+'</p><div class="tags"><span class="tag">'+esc(state.catMap[r.category_id]||'')+'</span><span class="tag">'+esc(state.areaMap[r.area_id]||'')+'</span><span class="pill warn">'+esc(plural(+r.open_reports,'open report'))+'</span></div><div class="acts" style="display:flex;gap:10px;margin-top:14px"><button class="btn small" data-d="approve">Approve</button><button class="btn small danger" data-d="remove">Remove</button></div></div>';}).join(''):'<div class="empty"><div class="big">&#9989;</div><h3>Queue is empty</h3><p>Nothing is waiting for review.</p></div>';
+      $$('[data-d]',main).forEach(function(b){b.addEventListener('click',async function(){
+        var id=b.closest('[data-id]').dataset.id,act=b.dataset.d,note='';
+        if(act==='remove'){var n=await noteBox('Remove this request?','Note for the log (optional)');if(n===null)return;note=n;}
+        try{await rpc('mod_decide',{p_request:id,p_action:act,p_note:note||null});toast(act==='approve'?'Approved':'Removed');load();}catch(e){toast(e.message);}
+      });});
+    }catch(e){if(my!==state.navId)return;main.innerHTML=errorBlock(e.message,false);}
+  }
+  load();
+}
+
+/* ---------------- router ---------------- */
+var routes=[[/^#\/feed$/,renderFeed],[/^#\/new$/,renderNew],[/^#\/mine$/,renderMine],[/^#\/request\/([0-9a-f-]{36})$/,renderRequest],[/^#\/chat\/([0-9a-f-]{36})$/,renderChat],[/^#\/settings$/,renderSettings],[/^#\/safety$/,renderSafety],[/^#\/mod$/,renderMod]];
+async function route(){
+  cleanup();
+  if(!state.session){renderWelcome();return;}
+  await ensureBoot();
+  if(state.setupError){renderSetup();return;}
+  if(state.blocked){renderBlocked();return;}
+  if(state.bootError){renderBootError();return;}
+  if(state.profile&&!state.profile.area_id&&!sessionStorage.getItem('abegg_onboarded')){renderOnboarding();return;}
+  var h=location.hash||'#/feed';
+  for(var i=0;i<routes.length;i++){var m=h.match(routes[i][0]);if(m){routes[i][1].apply(null,m.slice(1));return;}}
+  location.hash='#/feed';
+}
+window.addEventListener('hashchange',route);
+
+async function start(){
+  var r=await sb.auth.getSession();
+  state.session=r.data.session;
+  route();
+}
+sb.auth.onAuthStateChange(function(event,session){
+  if(event==='INITIAL_SESSION')return;
+  var had=!!state.session;state.session=session;
+  if(event==='SIGNED_OUT'){state.profile=null;bootP=null;sessionStorage.removeItem('abegg_onboarded');location.hash='';route();return;}
+  if(session&&!had){bootP=null;if(!location.hash||location.hash==='#')location.hash='#/feed';route();}
+});
+start();
+})();
+</script>
+</body>
+</html>
