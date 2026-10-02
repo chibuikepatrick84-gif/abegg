@@ -101,9 +101,10 @@ main.chatmain{padding-bottom:calc(150px + env(safe-area-inset-bottom,0px))}
 .stack{display:grid;gap:10px}
 .lbl{display:block;font-weight:800;font-size:.9rem;margin:0 0 6px}
 .field{margin-bottom:14px}
-input[type=text],input[type=email],input[type=date],select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);font-size:1rem}
+input[type=text],input[type=email],input[type=password],input[type=date],select,textarea{width:100%;padding:12px 14px;border:1.5px solid var(--line);border-radius:14px;background:var(--surface);font-size:1rem}
 textarea{resize:vertical;min-height:110px;line-height:1.4}
 input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
+.pwrow input{width:auto}
 .counter{font-size:.8rem;color:var(--soft);text-align:right;margin-top:4px}
 .seg{display:inline-flex;padding:4px;border-radius:999px;background:var(--mint);gap:2px;margin-bottom:14px}
 .seg button{border:0;background:transparent;border-radius:999px;padding:.45em 1.1em;font-weight:800;color:var(--soft);cursor:pointer}
@@ -126,6 +127,7 @@ input:focus,select:focus,textarea:focus{border-color:var(--brand);outline:none}
 .w-sub{color:rgba(255,255,255,.92);font-size:1.12rem;margin:14px 0 26px;max-width:30ch}
 .w-rules{list-style:none;margin:22px 4px 0;padding:0;display:grid;gap:10px;color:var(--ink)}
 .w-rules li{display:flex;gap:10px;align-items:flex-start;font-size:.95rem}
+.pwrow{display:flex;gap:6px;align-items:center}.pwrow input{flex:1}.pwrow .linkbtn{padding:8px 4px}
 .msg{margin-top:12px;font-size:.92rem;font-weight:700}
 .msg.err{color:var(--danger)}
 .msg.ok{color:var(--deep)}
@@ -294,37 +296,80 @@ function hashNotice(){
   }
   return '';
 }
+function validEmail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+function authMsg(err){
+  var m=(err&&err.message)||'';
+  if(/invalid login credentials/i.test(m))return 'Wrong email or password.';
+  if(/email not confirmed/i.test(m))return 'Please confirm your email first. Check your inbox for the link.';
+  if(/already registered|already been registered|user_already_exists/i.test(m)||(err&&err.code==='user_already_exists'))return 'This email already has an account. Log in instead.';
+  if(/password (should|must)|weak password/i.test(m))return 'Choose a stronger password (at least 8 characters).';
+  return friendly(err);
+}
 function renderWelcome(){
-  var notice=hashNotice(),pendingEmail='',cool=null;
+  var notice=hashNotice(),mode='login',useLink=false,pendingEmail='',cool=null;
   root.innerHTML='<div class="welcome"><div class="w-in">'
    +'<a class="w-brand" href="/"><img src="icon-192.png" alt="" width="34" height="34">ABEGG</a>'
    +'<h1>Abegg,<br>who has it?</h1>'
    +'<p class="w-sub">Ask for what you need. Members who have it reach out. Nobody sees who you are.</p>'
    +'<div class="card" id="signin">'
-   +'<div id="step1"><label class="lbl" for="email">Your email</label><div class="field"><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div>'
-   +'<button class="btn block" id="send">Send me a sign-in email</button><p class="fine" style="margin-top:10px">No name, photo or username needed. Other members never see your email.</p></div>'
-   +'<div id="step2" hidden><p>We sent a sign-in email to <b id="sentTo"></b>.</p><p class="fine" style="margin:6px 0 14px">Tap the link in that email to sign in. Open it on this same phone or computer. Check your spam folder if you cannot find it.</p>'
+   +'<div id="form">'
+   +'<div class="seg" id="seg" role="group" aria-label="Log in or sign up"><button type="button" id="tabLogin" aria-pressed="true">Log in</button><button type="button" id="tabSignup" aria-pressed="false">Sign up</button></div>'
+   +'<div class="field"><label class="lbl" for="email">Email</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div>'
+   +'<div id="pwarea"><div class="field"><label class="lbl" for="pw">Password</label><div class="pwrow"><input id="pw" type="password" autocomplete="current-password" placeholder="At least 8 characters"><button type="button" class="linkbtn" id="showpw">Show</button></div></div>'
+   +'<button class="btn block" id="submit">Log in</button><div style="text-align:center"><button class="linkbtn" id="forgot" type="button">Forgot password?</button></div></div>'
+   +'<div id="linkarea" hidden><button class="btn block" id="send">Send me a sign-in email</button></div>'
+   +'<div style="text-align:center;margin-top:4px"><button class="linkbtn" id="swmode" type="button">Email me a sign-in link instead</button></div>'
+   +'<p class="fine" style="margin-top:6px">No name, photo or username needed. Other members never see your email.</p></div>'
+   +'<div id="step2" hidden><p>We sent an email to <b id="sentTo"></b>.</p><p class="fine" style="margin:6px 0 14px">Tap the link in that email to continue. Open it on this same phone or computer. Check your spam folder if you cannot find it.</p>'
    +'<div id="codewrap" hidden><div class="field"><label class="lbl" for="code">Code from the email</label><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Code"></div><button class="btn block" id="verify" style="margin-bottom:10px">Sign in with code</button></div>'
-   +'<div class="stack"><button class="btn ghost block" id="resend" disabled>Send again</button><button class="linkbtn" id="showcode" type="button">My email has a code</button><button class="linkbtn" id="change" type="button">Use a different email</button></div></div>'
+   +'<div class="stack"><button class="btn ghost block" id="resend" disabled>Send again</button><button class="linkbtn" id="showcode" type="button">My email has a code</button><button class="linkbtn" id="change" type="button">Back</button></div></div>'
    +'<p class="msg '+(notice?'err':'')+'" id="msg" role="status">'+esc(notice)+'</p></div>'
    +'<ul class="w-rules"><li><span aria-hidden="true">&#128205;</span><span>Meet in busy public places.</span></li><li><span aria-hidden="true">&#128176;</span><span>Never pay before you have seen the item.</span></li><li><span aria-hidden="true">&#128683;</span><span>No weapons, drugs or anything illegal.</span></li></ul>'
    +'<p class="fine" style="margin:22px 4px 0"><a href="/">Back to the website</a></p></div></div>';
   var msg=$('#msg');
   function say(t,kind){msg.textContent=t||'';msg.className='msg '+(kind||'');}
+  function refreshMode(){
+    $('#tabLogin').setAttribute('aria-pressed',mode==='login');$('#tabSignup').setAttribute('aria-pressed',mode==='signup');
+    $('#seg').hidden=useLink;$('#pwarea').hidden=useLink;$('#linkarea').hidden=!useLink;
+    $('#submit').textContent=mode==='login'?'Log in':'Create account';
+    $('#pw').setAttribute('autocomplete',mode==='login'?'current-password':'new-password');
+    $('#forgot').hidden=mode!=='login';
+    $('#swmode').textContent=useLink?'Use a password instead':'Email me a sign-in link instead';
+  }
   function startCooldown(){
     var left=45,b=$('#resend');b.disabled=true;
     clearInterval(cool);cool=setInterval(function(){left--;if(left<=0){clearInterval(cool);b.disabled=false;b.textContent='Send again';}else b.textContent='Send again in '+left+'s';},1000);
     b.textContent='Send again in '+left+'s';
   }
   onLeave(function(){clearInterval(cool);});
-  async function send(){
+  function showWait(email){pendingEmail=email;$('#sentTo').textContent=email;$('#form').hidden=true;$('#step2').hidden=false;startCooldown();}
+  async function sendLink(){
     var email=$('#email').value.trim().toLowerCase();
-    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){say('Enter a valid email address.','err');return;}
+    if(!validEmail(email)){say('Enter a valid email address.','err');return;}
     var btn=$('#send');btn.disabled=true;say('Sending...','');
     var r=await sb.auth.signInWithOtp({email:email,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
     btn.disabled=false;
     if(r.error){say(friendly(r.error),'err');return;}
-    pendingEmail=email;$('#sentTo').textContent=email;$('#step1').hidden=true;$('#step2').hidden=false;say('Email sent. Check your inbox and spam folder.','ok');startCooldown();
+    showWait(email);say('Email sent. Check your inbox and spam folder.','ok');
+  }
+  async function submitPw(){
+    var email=$('#email').value.trim().toLowerCase(),pw=$('#pw').value;
+    if(!validEmail(email)){say('Enter a valid email address.','err');return;}
+    if(!pw){say('Enter your password.','err');return;}
+    if(mode==='signup'&&pw.length<8){say('Choose a password with at least 8 characters.','err');return;}
+    var btn=$('#submit');btn.disabled=true;say('Please wait...','');
+    if(mode==='login'){
+      var r=await sb.auth.signInWithPassword({email:email,password:pw});
+      btn.disabled=false;
+      if(r.error)say(authMsg(r.error),'err');
+      return;
+    }
+    var s2=await sb.auth.signUp({email:email,password:pw,options:{emailRedirectTo:location.origin+location.pathname}});
+    btn.disabled=false;
+    if(s2.error){say(authMsg(s2.error),'err');return;}
+    if(s2.data&&s2.data.session)return;
+    if(s2.data&&s2.data.user&&s2.data.user.identities&&s2.data.user.identities.length===0){say('This email already has an account. Log in instead.','err');return;}
+    showWait(email);say('Almost done. Tap the link in the email we sent, then log in.','ok');
   }
   async function verify(){
     var token=$('#code').value.replace(/\s/g,'');
@@ -334,8 +379,20 @@ function renderWelcome(){
     btn.disabled=false;
     if(r.error){say('That code did not work. Check it, or send a new one.','err');}
   }
-  $('#send').addEventListener('click',send);
-  $('#email').addEventListener('keydown',function(e){if(e.key==='Enter')send();});
+  $('#tabLogin').addEventListener('click',function(){mode='login';say('');refreshMode();});
+  $('#tabSignup').addEventListener('click',function(){mode='signup';say('');refreshMode();});
+  $('#swmode').addEventListener('click',function(){useLink=!useLink;say('');refreshMode();});
+  $('#showpw').addEventListener('click',function(){var p=$('#pw');var show=p.type==='password';p.type=show?'text':'password';this.textContent=show?'Hide':'Show';});
+  $('#submit').addEventListener('click',submitPw);
+  $('#send').addEventListener('click',sendLink);
+  $('#pw').addEventListener('keydown',function(e){if(e.key==='Enter')submitPw();});
+  $('#email').addEventListener('keydown',function(e){if(e.key==='Enter'){if(useLink)sendLink();else $('#pw').focus();}});
+  $('#forgot').addEventListener('click',async function(){
+    var email=$('#email').value.trim().toLowerCase();
+    if(!validEmail(email)){say('Type your email above first, then tap Forgot password.','err');return;}
+    var r=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+location.pathname});
+    if(r.error)say(authMsg(r.error),'err');else say('If that email has an account, we sent a link to reset your password.','ok');
+  });
   $('#verify').addEventListener('click',verify);
   $('#showcode').addEventListener('click',function(){$('#codewrap').hidden=false;this.hidden=true;$('#code').focus();});
   $('#code').addEventListener('keydown',function(e){if(e.key==='Enter')verify();});
@@ -343,7 +400,19 @@ function renderWelcome(){
     $('#resend').disabled=true;var r=await sb.auth.signInWithOtp({email:pendingEmail,options:{emailRedirectTo:location.origin+location.pathname,shouldCreateUser:true}});
     if(r.error){say(friendly(r.error),'err');$('#resend').disabled=false;}else{say('Sent again.','ok');startCooldown();}
   });
-  $('#change').addEventListener('click',function(){clearInterval(cool);$('#step2').hidden=true;$('#step1').hidden=false;$('#codewrap').hidden=true;$('#showcode').hidden=false;say('');});
+  $('#change').addEventListener('click',function(){clearInterval(cool);$('#step2').hidden=true;$('#form').hidden=false;$('#codewrap').hidden=true;$('#showcode').hidden=false;say('');});
+  refreshMode();
+}
+function renderNewPassword(){
+  root.innerHTML='<div class="welcome"><div class="w-in"><a class="w-brand" href="/"><img src="icon-192.png" alt="" width="34" height="34">ABEGG</a><h1 style="font-size:2.4rem">Choose a new password</h1><div class="card" style="margin-top:26px"><div class="field"><label class="lbl" for="np">New password</label><input id="np" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div><button class="btn block" id="savepw">Save password</button><p class="msg" id="msg" role="status"></p></div></div></div>';
+  $('#savepw').addEventListener('click',async function(){
+    var pw=$('#np').value,msg=$('#msg');
+    if(pw.length<8){msg.className='msg err';msg.textContent='Choose a password with at least 8 characters.';return;}
+    this.disabled=true;
+    var r=await sb.auth.updateUser({password:pw});
+    if(r.error){msg.className='msg err';msg.textContent=authMsg(r.error);this.disabled=false;return;}
+    state.recovery=false;toast('Password updated');location.hash='#/feed';route();
+  });
 }
 
 /* ---------------- boot ---------------- */
@@ -652,6 +721,7 @@ function renderSettings(){
     '<div class="card"><div class="field"><label class="lbl" for="ar">Your area</label><select id="ar"><option value="">Choose your area</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div>'
     +'<div class="field"><span class="lbl">Categories you want to hear about</span><div class="checks">'+state.cats.map(function(c){return '<label><input type="checkbox" value="'+c.id+'" '+(chosen.indexOf(c.id)>-1?'checked':'')+'>'+esc(c.label)+'</label>';}).join('')+'</div><p class="fine" style="margin-top:8px">Alerts are coming soon. Your choices are saved for when they arrive.</p></div>'
     +'<button class="btn block" id="save">Save</button><p class="msg" id="msg" role="status"></p></div>'
+    +'<div class="card"><div class="field"><label class="lbl" for="np">Set or change your password</label><input id="np" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div><button class="btn block" id="savepw">Save password</button><p class="msg" id="pmsg" role="status"></p></div>'
     +'<div class="card"><ul class="menu"><li><a href="#/safety" style="border-top:0">'+icon('shield')+'Safety centre</a></li>'+(isMod?'<li><a href="#/mod">'+icon('list')+'Moderation queue</a></li>':'')
     +'<li><a href="mailto:'+esc(SUPPORT_EMAIL)+'?subject=Delete%20my%20ABEGG%20account">Delete my account and data</a></li><li><button id="out">Sign out</button></li></ul></div>'
     +'<p class="fine" style="text-align:center">ABEGG beta</p>'});
@@ -661,6 +731,15 @@ function renderSettings(){
     this.disabled=true;var msg=$('#msg');
     try{await rpc('update_my_settings',{p_area:area?+area:null,p_categories:cats});state.profile=Object.assign({},p,{area_id:area?+area:null,followed_category_ids:cats});msg.className='msg ok';msg.textContent='Saved.';}
     catch(e){msg.className='msg err';msg.textContent=e.message;}
+    this.disabled=false;
+  });
+  $('#savepw').addEventListener('click',async function(){
+    var pw=$('#np').value,pm=$('#pmsg');
+    if(pw.length<8){pm.className='msg err';pm.textContent='Choose a password with at least 8 characters.';return;}
+    this.disabled=true;
+    var r=await sb.auth.updateUser({password:pw});
+    if(r.error){pm.className='msg err';pm.textContent=authMsg(r.error);}
+    else{pm.className='msg ok';pm.textContent='Password saved. You can now log in with your email and password.';$('#np').value='';}
     this.disabled=false;
   });
   $('#out').addEventListener('click',function(){sb.auth.signOut();});
@@ -695,6 +774,7 @@ var routes=[[/^#\/feed$/,renderFeed],[/^#\/new$/,renderNew],[/^#\/mine$/,renderM
 async function route(){
   cleanup();
   if(!state.session){renderWelcome();return;}
+  if(state.recovery){renderNewPassword();return;}
   await ensureBoot();
   if(state.setupError){renderSetup();return;}
   if(state.blocked){renderBlocked();return;}
@@ -713,6 +793,7 @@ async function start(){
 }
 sb.auth.onAuthStateChange(function(event,session){
   if(event==='INITIAL_SESSION')return;
+  if(event==='PASSWORD_RECOVERY'){state.recovery=true;state.session=session;route();return;}
   var had=!!state.session;state.session=session;
   if(event==='SIGNED_OUT'){state.profile=null;bootP=null;sessionStorage.removeItem('abegg_onboarded');location.hash='';route();return;}
   if(session&&!had){bootP=null;if(!location.hash||location.hash==='#')location.hash='#/feed';route();}
