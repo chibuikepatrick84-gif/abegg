@@ -199,6 +199,9 @@ function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){retur
 function icon(id){return '<svg class="icon" aria-hidden="true"><use href="#i-'+id+'"/></svg>';}
 function onLeave(fn){cleanupFns.push(fn);}
 function cleanup(){cleanupFns.forEach(function(f){try{f();}catch(e){}});cleanupFns=[];}
+function lsGet(k){try{return localStorage.getItem(k);}catch(e){return null;}}
+function lsSet(k,v){try{localStorage.setItem(k,v);}catch(e){}}
+function isGuest(){return !!(state.session&&state.session.user&&state.session.user.is_anonymous);}
 function plural(n,w){return n+' '+w+(n===1?'':'s');}
 function ago(iso){
   var s=Math.max(0,Math.round((Date.now()-new Date(iso).getTime())/1000));
@@ -229,7 +232,7 @@ function friendly(err){
   if(/Failed to fetch|NetworkError|Load failed|network/i.test(msg))return 'No connection. Check your data or Wi-Fi and try again.';
   if(err&&(err.code==='PGRST202'||err.code==='PGRST205'||err.code==='42P01'||/Could not find the (function|table)/i.test(msg))){state.setupError=true;return 'The ABEGG database is not set up yet.';}
   if(/JWT expired|invalid JWT|Please sign in first/i.test(msg))return 'Your session ended. Please sign in again.';
-  if(/rate limit/i.test(msg))return 'Too many sign-in emails were sent. Please wait a while (up to an hour) and try again.';
+  if(/rate limit|too many/i.test(msg))return 'Too many attempts from your network. Please wait a while (up to an hour) and try again.';
   return msg;
 }
 async function rpc(name,args){
@@ -312,14 +315,15 @@ function renderWelcome(){
    +'<h1>Abegg,<br>who has it?</h1>'
    +'<p class="w-sub">Ask for what you need. Members who have it reach out. Nobody sees who you are.</p>'
    +'<div class="card" id="signin">'
-   +'<div id="form">'
+   +'<div id="guest"><button class="btn block" id="guestbtn" style="font-size:1.1rem;padding:.95em 1.3em">Get started</button><p class="fine" style="text-align:center;margin:10px 0 14px">No email and no name. You get a private alias and can start right away.</p><button class="btn ghost block" id="showlogin">I already have an account</button></div>'
+   +'<div id="form" hidden>'
    +'<div class="seg" id="seg" role="group" aria-label="Log in or sign up"><button type="button" id="tabLogin" aria-pressed="true">Log in</button><button type="button" id="tabSignup" aria-pressed="false">Sign up</button></div>'
    +'<div class="field"><label class="lbl" for="email">Email</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div>'
    +'<div id="pwarea"><div class="field"><label class="lbl" for="pw">Password</label><div class="pwrow"><input id="pw" type="password" autocomplete="current-password" placeholder="At least 8 characters"><button type="button" class="linkbtn" id="showpw">Show</button></div></div>'
    +'<button class="btn block" id="submit">Log in</button><div style="text-align:center"><button class="linkbtn" id="forgot" type="button">Forgot password?</button></div></div>'
    +'<div id="linkarea" hidden><button class="btn block" id="send">Send me a sign-in email</button></div>'
    +'<div style="text-align:center;margin-top:4px"><button class="linkbtn" id="swmode" type="button">Email me a sign-in link instead</button></div>'
-   +'<p class="fine" style="margin-top:6px">No name, photo or username needed. Other members never see your email.</p></div>'
+   +'<p class="fine" style="margin-top:6px">Other members never see your email.</p><div style="text-align:center"><button class="linkbtn" id="backguest" type="button">Back</button></div></div>'
    +'<div id="step2" hidden><p>We sent an email to <b id="sentTo"></b>.</p><p class="fine" style="margin:6px 0 14px">Tap the link in that email to continue. Open it on this same phone or computer. Check your spam folder if you cannot find it.</p>'
    +'<div id="codewrap" hidden><div class="field"><label class="lbl" for="code">Code from the email</label><input id="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="10" placeholder="Code"></div><button class="btn block" id="verify" style="margin-bottom:10px">Sign in with code</button></div>'
    +'<div class="stack"><button class="btn ghost block" id="resend" disabled>Send again</button><button class="linkbtn" id="showcode" type="button">My email has a code</button><button class="linkbtn" id="change" type="button">Back</button></div></div>'
@@ -379,6 +383,19 @@ function renderWelcome(){
     btn.disabled=false;
     if(r.error){say('That code did not work. Check it, or send a new one.','err');}
   }
+  function guestMsg(err){
+    var m=(err&&err.message)||'';
+    if(/anonymous/i.test(m)&&/disabled|not enabled/i.test(m)||(err&&err.code==='anonymous_provider_disabled'))return 'Guest start is not switched on yet. If you run this app, turn on "Allow anonymous sign-ins" in Supabase (Authentication, Sign In / Providers).';
+    return friendly(err);
+  }
+  async function guest(){
+    var btn=$('#guestbtn');btn.disabled=true;say('Setting things up...','');
+    var r=await sb.auth.signInAnonymously();
+    if(r.error){btn.disabled=false;say(guestMsg(r.error),'err');}
+  }
+  $('#guestbtn').addEventListener('click',guest);
+  $('#showlogin').addEventListener('click',function(){$('#guest').hidden=true;$('#form').hidden=false;say('');$('#email').focus();});
+  $('#backguest').addEventListener('click',function(){$('#form').hidden=true;$('#guest').hidden=false;say('');});
   $('#tabLogin').addEventListener('click',function(){mode='login';say('');refreshMode();});
   $('#tabSignup').addEventListener('click',function(){mode='signup';say('');refreshMode();});
   $('#swmode').addEventListener('click',function(){useLink=!useLink;say('');refreshMode();});
@@ -472,9 +489,12 @@ function reqCard(r){
 }
 async function renderFeed(){
   var my=++state.navId;
+  var showTip=isGuest()&&!lsGet('abegg_tip_x');
   var main=shell({tab:'feed',right:'<a class="icon-btn" href="#/settings" aria-label="Settings">'+icon('gear')+'</a>',body:
-    '<div class="filters"><label class="sr" for="fc">Category</label><select id="fc"><option value="">All categories</option>'+state.cats.map(function(c){return '<option value="'+c.id+'">'+esc(c.label)+'</option>';}).join('')+'</select><label class="sr" for="fa">Area</label><select id="fa"><option value="">All areas</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div><div id="list">'+skeleton(3)+'</div><div id="more" style="text-align:center"></div>'});
+    (showTip?'<div class="note good" id="tip"><b>You are using ABEGG as a guest.</b> Save your account so you do not lose it if you clear your browser or switch phones.<div style="margin-top:10px;display:flex;gap:8px"><a class="btn small" href="#/settings">Save my account</a><button class="btn small ghost" id="tipx" type="button">Not now</button></div></div>':'')
+    +'<div class="filters"><label class="sr" for="fc">Category</label><select id="fc"><option value="">All categories</option>'+state.cats.map(function(c){return '<option value="'+c.id+'">'+esc(c.label)+'</option>';}).join('')+'</select><label class="sr" for="fa">Area</label><select id="fa"><option value="">All areas</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div><div id="list">'+skeleton(3)+'</div><div id="more" style="text-align:center"></div>'});
   $('#fc').value=state.feed.cat;$('#fa').value=state.feed.area;
+  var tx=$('#tipx');if(tx)tx.addEventListener('click',function(){lsSet('abegg_tip_x','1');$('#tip').remove();});
   var before=null,list=$('#list'),more=$('#more');
   async function load(reset){
     if(reset){before=null;list.innerHTML=skeleton(3);more.innerHTML='';}
@@ -717,13 +737,15 @@ function renderSettings(){
   var my=++state.navId;
   var p=state.profile||{},chosen=p.followed_category_ids||[];
   var isMod=p.role==='moderator'||p.role==='admin';
+  var guestNow=isGuest();
   var main=shell({back:'#/feed',title:'Settings',tab:'feed',body:
     '<div class="card"><div class="field"><label class="lbl" for="ar">Your area</label><select id="ar"><option value="">Choose your area</option>'+state.areas.map(function(a){return '<option value="'+a.id+'">'+esc(a.label)+'</option>';}).join('')+'</select></div>'
     +'<div class="field"><span class="lbl">Categories you want to hear about</span><div class="checks">'+state.cats.map(function(c){return '<label><input type="checkbox" value="'+c.id+'" '+(chosen.indexOf(c.id)>-1?'checked':'')+'>'+esc(c.label)+'</label>';}).join('')+'</div><p class="fine" style="margin-top:8px">Alerts are coming soon. Your choices are saved for when they arrive.</p></div>'
     +'<button class="btn block" id="save">Save</button><p class="msg" id="msg" role="status"></p></div>'
-    +'<div class="card"><div class="field"><label class="lbl" for="np">Set or change your password</label><input id="np" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div><button class="btn block" id="savepw">Save password</button><p class="msg" id="pmsg" role="status"></p></div>'
+    +(guestNow?'<div class="card"><h2 style="font-size:1.1rem">Save your account</h2><p class="fine" style="margin:6px 0 12px">You are using ABEGG as a guest, so your account lives only in this browser. If you clear your browser data or switch phones, you will lose it, along with your requests and chats. Add an email and a password to keep it and log in anywhere. Other members still never see your email.</p><div class="field"><label class="lbl" for="sv_email">Email</label><input id="sv_email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com"></div><div class="field"><label class="lbl" for="sv_pw">Password</label><input id="sv_pw" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div><button class="btn block" id="savebtn">Save my account</button><p class="msg" id="svmsg" role="status"></p></div>'
+    :'<div class="card"><div class="field"><label class="lbl" for="np">Set or change your password</label><input id="np" type="password" autocomplete="new-password" placeholder="At least 8 characters"></div><button class="btn block" id="savepw">Save password</button><p class="msg" id="pmsg" role="status"></p></div>')
     +'<div class="card"><ul class="menu"><li><a href="#/safety" style="border-top:0">'+icon('shield')+'Safety centre</a></li>'+(isMod?'<li><a href="#/mod">'+icon('list')+'Moderation queue</a></li>':'')
-    +'<li><a href="mailto:'+esc(SUPPORT_EMAIL)+'?subject=Delete%20my%20ABEGG%20account">Delete my account and data</a></li><li><button id="out">Sign out</button></li></ul></div>'
+    +'<li><button id="del">Delete my account and data</button></li><li><button id="out">Sign out</button></li></ul></div>'
     +'<p class="fine" style="text-align:center">ABEGG beta</p>'});
   $('#ar').value=p.area_id||'';
   $('#save').addEventListener('click',async function(){
@@ -733,7 +755,23 @@ function renderSettings(){
     catch(e){msg.className='msg err';msg.textContent=e.message;}
     this.disabled=false;
   });
-  $('#savepw').addEventListener('click',async function(){
+  var svb=$('#savebtn');
+  if(svb)svb.addEventListener('click',async function(){
+    var email=$('#sv_email').value.trim().toLowerCase(),pw=$('#sv_pw').value,m=$('#svmsg');
+    m.className='msg err';
+    if(!validEmail(email)){m.textContent='Enter a valid email address.';return;}
+    if(pw.length<8){m.textContent='Choose a password with at least 8 characters.';return;}
+    this.disabled=true;
+    var r=await sb.auth.updateUser({email:email,password:pw});
+    this.disabled=false;
+    if(r.error){m.textContent=(/already (been )?registered|already exists/i.test(r.error.message||'')||r.error.code==='email_exists')?'That email already has an account.':authMsg(r.error);return;}
+    var u=r.data&&r.data.user;
+    if(u&&u.new_email){m.className='msg ok';m.textContent='Almost done. Tap the link in the email we sent to '+u.new_email+' to finish saving your account.';return;}
+    try{await sb.auth.refreshSession();}catch(e){}
+    toast('Account saved');renderSettings();
+  });
+  var spw=$('#savepw');
+  if(spw)spw.addEventListener('click',async function(){
     var pw=$('#np').value,pm=$('#pmsg');
     if(pw.length<8){pm.className='msg err';pm.textContent='Choose a password with at least 8 characters.';return;}
     this.disabled=true;
@@ -742,7 +780,21 @@ function renderSettings(){
     else{pm.className='msg ok';pm.textContent='Password saved. You can now log in with your email and password.';$('#np').value='';}
     this.disabled=false;
   });
-  $('#out').addEventListener('click',function(){sb.auth.signOut();});
+  $('#out').addEventListener('click',async function(){
+    if(isGuest()){
+      var ok=await confirmBox('Sign out of your guest account?','A guest account is saved only in this browser. If you sign out, you cannot get it back, and you lose your requests and chats. Save your account first to keep it.','Sign out anyway',true);
+      if(!ok)return;
+    }
+    sb.auth.signOut();
+  });
+  $('#del').addEventListener('click',async function(){
+    var ok=await confirmBox('Delete your account?','This permanently removes your account, your requests, your offers and your chats. It cannot be undone.','Delete everything',true);
+    if(!ok)return;
+    try{await rpc('delete_my_account');toast('Your account was deleted');}
+    catch(e){if(e.raw&&e.raw.code==='PGRST202'){state.setupError=false;toast('Account deletion is not switched on yet. Run the latest database update.');}else toast(e.message);return;}
+    sessionStorage.removeItem('abegg_onboarded');
+    sb.auth.signOut();
+  });
 }
 function renderSafety(){
   ++state.navId;
